@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GAIN-CODING Social Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0b0e14;
+    --mantle: #12151e;
+    --surface: #191d2b;
+    --surface1: #242a3d;
+    --border: #242a3d;
+    --text: #e6e8ee;
+    --text-muted: #9aa1b5;
+    --accent: #7c86ff;
+    --purple: #a78bfa;
+    --blue: #7c86ff;
+    --green: #4ade80;
+    --yellow: #facc15;
+    --red: #f87171;
+    --cyan: #22d3ee;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    --font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+  }
+  html, body { width: 1280px; height: 640px; overflow: hidden; }
+  body { font-family: var(--font); }
+
+  .frame {
+    width: 1280px;
+    height: 640px;
+    padding: 53px;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+
+  /* ── Left: branding ── */
+  .brand { flex: 0 0 520px; }
+  .logo-row { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; }
+  .logo {
+    width: 64px; height: 64px; flex-shrink: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #7c86ff, #22d3ee);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 24px rgba(124, 134, 255, 0.3);
+  }
+  .logo svg { width: 36px; height: 36px; }
+  .logo-cap {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    line-height: 1.08;
+  }
+  h1 .gain { color: var(--accent); }
+  .subtitle {
+    margin-top: 8px;
+    font-size: 19px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .desc {
+    margin-top: 18px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text);
+    opacity: 0.92;
+    max-width: 500px;
+  }
+  .chips {
+    margin-top: 26px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    padding: 8px 16px;
+    border: 1px solid var(--surface1);
+    border-radius: 999px;
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.4px;
+  }
+
+  /* ── Right: mock OpenCode CLI ── */
+  .mock { flex: 1; min-width: 0; }
+  .window {
+    background: var(--mantle);
+    border: 1px solid var(--surface1);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  }
+  .win-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-r { background: #f87171; }
+  .dot-y { background: #facc15; }
+  .dot-g { background: #4ade80; }
+  .win-url {
+    flex: 1;
+    margin-left: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+  }
+  .term-body {
+    padding: 22px 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    font-family: var(--font-mono);
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  .user { color: var(--cyan); }
+  .agent { color: var(--accent); }
+  .cmd { color: var(--text); }
+  .ok { color: var(--green); }
+  .dim { color: var(--text-muted); }
+
+  /* ── Footer ── */
+  .footer {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="main">
+      <div class="brand">
+        <div class="logo-row">
+          <div class="logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 0.7 V2.1" stroke="#0b0e14" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="12" cy="0.9" r="0.9" fill="#0b0e14"/>
+              <path fill-rule="evenodd" d="M5.2 6.3 C5.2 4.6 6.6 3.2 8.3 3.2 H15.7 C17.4 3.2 18.8 4.6 18.8 6.3 V8.6 C18.8 10.3 17.4 11.7 15.7 11.7 H8.3 C6.6 11.7 5.2 10.3 5.2 8.6 Z M7.9 6.6 C7.9 5.7 8.7 4.9 9.6 4.9 H14.4 C15.3 4.9 16.1 5.7 16.1 6.6 V8.2 C16.1 9.1 15.3 9.9 14.4 9.9 H9.6 C8.7 9.9 7.9 9.1 7.9 8.2 Z" fill="#0b0e14"/>
+              <rect x="9.4" y="5.9" width="1.4" height="2.4" rx="0.7" fill="#0b0e14"/>
+              <rect x="13.4" y="5.9" width="1.4" height="2.4" rx="0.7" fill="#0b0e14"/>
+              <circle cx="3.5" cy="7.2" r="1.1" fill="#0b0e14"/>
+              <circle cx="20.5" cy="7.2" r="1.1" fill="#0b0e14"/>
+              <path d="M7.3 17.2 L4.4 15.6" stroke="#0b0e14" stroke-width="2.2" stroke-linecap="round"/>
+              <path d="M16.7 17.2 L19.6 15.6" stroke="#0b0e14" stroke-width="2.2" stroke-linecap="round"/>
+              <circle cx="2.7" cy="14.9" r="1.9" fill="none" stroke="#0b0e14" stroke-width="2.4"/>
+              <circle cx="21.3" cy="14.9" r="1.9" fill="none" stroke="#0b0e14" stroke-width="2.4"/>
+              <path d="M7.2 13.5 L16.8 13.5 C18.4 13.6 19.2 14.9 19 16.7 C18.8 18.5 17.4 21.4 12 22.4 C6.6 21.4 5.2 18.5 5 16.7 C4.8 14.9 5.6 13.6 7.2 13.5 Z" fill="#0b0e14"/>
+            </svg>
+          </div>
+          <span class="logo-cap">GAIN-CODING</span>
+        </div>
+        <h1>Guided Agent In <span class="gain">Native Coding</span></h1>
+        <div class="subtitle">Personal Workflow Knowledge Base</div>
+        <p class="desc">A knowledge base that keeps agent-assisted development anchored in the principles of traditional coding - issues, branches, reviewed pull requests, atomic commits, and disciplined releases.</p>
+        <div class="chips">
+          <span class="chip">Policies</span>
+          <span class="chip">Workflow</span>
+          <span class="chip">Conventions</span>
+          <span class="chip">Templates</span>
+        </div>
+      </div>
+
+      <div class="mock">
+        <div class="window">
+          <div class="win-bar">
+            <span class="dot dot-r"></span>
+            <span class="dot dot-y"></span>
+            <span class="dot dot-g"></span>
+            <span class="win-url">opencode</span>
+          </div>
+          <div class="term-body">
+            <div><span class="user">user</span> <span class="cmd">Start a new project from scratch</span></div>
+            <div><span class="agent">agent</span> <span class="cmd">Reading project-bootstrap...</span> <span class="ok">OK</span></div>
+            <div><span class="agent">agent</span> <span class="cmd">Creating issue ENH-001</span> <span class="ok">OK</span></div>
+            <div><span class="agent">agent</span> <span class="cmd">Branch feature/scaffold</span> <span class="dim">(PR #1)</span></div>
+            <div><span class="agent">agent</span> <span class="cmd">Atomic commits, CI green, awaiting your review</span></div>
+            <div><span class="user">user</span> <span class="cmd">Merge it.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span>ffooll-bit / GAIN-CODING</span>
+      <span>MIT License · Workflow knowledge base</span>
+    </div>
+  </div>
+</body>
+</html>

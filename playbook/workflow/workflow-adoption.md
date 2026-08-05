@@ -1,0 +1,7 @@
+# Workflow Adoption
+
+> Trigger: USER wants to apply this workflow to an existing project (an existing GitHub repo) to bring it up to the standard of Core Rules and Project Bootstrap.
+
+1. USER asks the AGENT to audit the old repo condition. The AGENT inspects and records findings as items in `docs/IMPROVEMENTS.md` following Findings and Planning. Things that must be checked: CI status (last workflow green or red), stale branches (inactive or already-merged local/remote branches), sensitive data in history (tokens, `.env`, internal endpoints, institution names — check with the commands in Data Security and Public Readiness), completeness of guardrail files and folder structure (whether they exist or need creating), and existing GitHub protection settings. The AGENT **presents the audit results to the USER and stops**.
+2. USER approves the audit results. The AGENT applies each Project Bootstrap step to the old repo: create if missing, verify and adjust if already present. Repo initialization and protection configuration only need to be verified/taken from the already-running condition, not recreated from scratch.
+3. USER asks for the audit findings to be fixed. The AGENT works through each finding after the whole adoption is complete, each through the appropriate Flow (Findings and Planning → Issue → Code Implementation).

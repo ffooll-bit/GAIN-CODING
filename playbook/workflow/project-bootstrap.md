@@ -1,0 +1,11 @@
+# Project Bootstrap
+
+> Trigger: USER wants to create a new project and asks the AGENT to prepare the repository structure from scratch.
+
+1. USER asks the AGENT to create a new project. The AGENT initializes the repository: create the repository on GitHub (`gh repo create`) and set up locally, then create the base folder structure — `docs/` (documentation), `temp/` (temporary work folder, gitignored), the source code folder (`app/`, `src/`, or per stack) if the project actually has application code, and guardrail files at the root (`.gitignore`, `.editorconfig`, `.gitattributes`). Guardrail file content follows Guardrail Files.
+2. USER asks the AGENT to prepare the standard documentation. The AGENT creates `README.md`, `CHANGELOG.md`, `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md` following Standard Docs and CHANGELOG. The AGENT **presents the result to the USER and stops**.
+3. USER approves the documentation. The AGENT prepares the `.github` folder: `workflows/ci.yml` (CI: lint + test + build), `ISSUE_TEMPLATE/` (issue templates: `bug_report.md`, `feature_request.md`, `config.yml`), `PULL_REQUEST_TEMPLATE.md`, `RELEASE_NOTES_TEMPLATE.md`, and `dependabot.yml`. Full content of each follows Format Specs: Issue Templates, Pull Request Template, Release Notes Template, and Dependabot Config. The AGENT also creates `docs/IMPROVEMENTS.md` with the lifecycle skeleton and ID scheme (see IMPROVEMENTS Structure).
+4. USER approves the repository structure. The AGENT applies all GitHub protection settings from Core Rules (after getting USER approval per the "Approval of Non-File Changes" boundary) — including enabling all three merge methods per Merge Strategy — and ensures Issues are enabled.
+5. USER asks for final verification. The AGENT pushes all files via the first PR (not directly to `main`), waits for a green CI, and ensures the repository is ready to be published (see Data Security and Public Readiness).
+
+> If the GitHub CLI (`gh`) is not authenticated during the process above, USER just runs `gh auth login` suggested by the AGENT and follows the browser login instructions from gh.
