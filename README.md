@@ -48,307 +48,280 @@ The honest summary: the agent does the heavy lifting, the rules keep things resp
 
 ### Disclaimer
 
-This repository was created for **personal use** and designed for a specific environment. It is primarily intended for people running a similar setup: Windows, [Visual Studio Code](https://github.com/microsoft/vscode), [OpenCode](https://github.com/anomalyco/opencode), [Magic Context](https://github.com/cortexkit/magic-context), GitHub CLI (`gh`, [cli/cli](https://github.com/cli/cli)), the [ponytail skill](https://github.com/dietrichgebert/ponytail), and DeepSeek V4 Flash Free as the primary agent model.
+This repository was created for **personal use** and designed for a specific environment. It is primarily intended for people running a similar setup: Windows, [Visual Studio Code](https://github.com/microsoft/vscode), [OpenCode](https://github.com/anomalyco/opencode), [Magic Context](https://github.com/cortexkit/magic-context), [GitHub CLI](https://github.com/cli/cli) (`gh`), the [ponytail skill](https://github.com/dietrichgebert/ponytail), and DeepSeek V4 Flash Free as the primary agent model.
 
 Anyone with a similar setup is welcome to adapt, extend, and contribute to this knowledge base, but there is no guarantee that it will work well outside that environment.
 
 ## How to Use
 
-GAIN-CODING is used as a **workflow knowledge base for an AI agent**. You do not need to give the agent the entire repository. Give it the smallest set of documents that is sufficient for the task at hand.
+GAIN-CODING is a **workflow knowledge base for AI-assisted development**. You do not need to give the agent the entire repository. Instead, provide only the documents relevant to the task at hand. This is **progressive context loading**: give the agent enough context to follow the rules, but not so much context that the rules become noise.
 
-The basic pattern is:
-
-```text
-Initialize the agent
-        |
-        v
-Choose the workflow
-        |
-        v
-Give the agent the workflow document
-        |
-        v
-Agent works until an approval gate
-        |
-        v
-You review and approve
-        |
-        v
-Agent continues
-```
-
-### Quick Start
-
-For a typical session:
-
-1. **Initialize the agent** with the five core policy documents if they are not already available in the agent's context or memory.
-2. **Choose the workflow** that matches what you want to do.
-3. **Give the agent only that workflow document** and any templates or references it explicitly requires.
-4. **Let the agent execute the workflow** until it reaches an approval gate.
-5. **Review and approve** before the agent crosses the gate.
-
-The agent may inspect, analyze, prepare, verify, and propose. It must not make decisions reserved for the user or cross an explicit approval gate without the user's approval.
-
-> **Context principle:** Do not load the entire GAIN-CODING repository unless you explicitly need the full manual. Load the minimum context required for the current task.
+> The prompts below are starting points, not a script. Treat them as a draft you are expected to adjust, improve, and reshape for your own situation — and if you make one better, contributions are welcome.
 
 ### Step 1 — Initialize the Agent
 
-At the beginning of a new session, make sure the agent knows the five core GAIN-CODING policies.
+At the beginning of a new session, make sure the agent has the five core policies available in its context or memory.
 
-If the policies are already available in the agent's persistent memory or context, **do not load them again**. Otherwise, load the five documents below in order.
+If they are already available, skip this step. Otherwise, load the following documents **one at a time, in order**, and wait for the agent to confirm each before providing the next:
 
-Feed them one at a time and wait for the agent to confirm each document before providing the next.
+1. #### **[Core Rules](playbook/policies/core-rules.md)** — the workflow principles that cannot be bypassed.
 
-#### 1. Core Rules
+   ```text
+   Read this document fully: {URL}
+   It defines the workflow principles that cannot be bypassed in this project.
+   You must follow them for the rest of this session.
+   
+   After reading:
+   1. Confirm that you have read the document.
+   2. Summarize the core rules in 1-2 sentences.
+   3. Do not take any action yet.
+   4. Wait for my next instruction.
+   ```
 
-**[Core Rules](playbook/policies/core-rules.md)** — the workflow principles that cannot be bypassed.
+2. #### **[Repository Protection](playbook/policies/repository-protection.md)** — the GitHub settings that enforce the workflow.
+
+   ```text
+   Next, read this document fully: {URL}
+   It explains the GitHub protection settings that enforce the workflow, including branch protection, merge methods, and restrictions on direct pushes.
+   
+   After reading:
+   1. Confirm that you have read the document.
+   2. Summarize which repository protections are enforced.
+   3. Do not change any repository settings.
+   4. Wait for my next instruction.
+   ```
+
+3. #### **[Merge Strategy](playbook/policies/merge-strategy.md)** — how pull requests enter the target branch for each case.
+
+   ```text
+   Next, read this document fully: {URL}
+   It defines how a pull request enters the target branch for each case, including when to use squash, rebase, or merge.
+   
+   After reading:
+   1. Confirm that you have read the document.
+   2. Summarize which merge method applies to each case.
+   3. Do not merge or modify any pull request.
+   4. Wait for my next instruction.
+   ```
+
+4. #### **[Branching Model](playbook/policies/branching-model.md)** — the branch layout and how to select the appropriate branch.
+
+   ```text
+   Next, read this document fully: {URL}
+   It explains the branch layout and how to select the correct branch prefix for each type of change.
+   
+   After reading:
+   1. Confirm that you have read the document.
+   2. Summarize the branching rules.
+   3. Do not create or switch branches yet.
+   4. Wait for my next instruction.
+   ```
+
+5. #### **[Boundaries](playbook/policies/boundaries.md)** — the limits that apply to the agent's operation.
+
+   ```text
+   Next, read this document fully: {URL}
+   It defines the boundaries you must respect, including communication language, line wrapping, approval requirements, and the operating environment.
+   
+   After reading:
+   1. Confirm that you have read the document.
+   2. Summarize the boundaries you must respect.
+   3. Do not take any action yet.
+   4. Wait for my next instruction.
+   ```
+
+### Optional Step — Save the Policies to Memory (Magic Context)
+
+Magic Context only helps **across sessions**, not within the current one. In this session the five policies are already loaded into the agent's context, so nothing needs saving here. To let the next session skip Step 1, ask the agent to save the policies to its project memory once Step 1 finishes:
 
 ```text
-Read this document fully: {URL}
-It defines the workflow principles that cannot be bypassed in this project.
-
-After reading:
-1. Confirm that you have read the document.
-2. Summarize the core rules in 1-2 sentences.
-3. Do not take any action yet.
-4. Wait for my next instruction.
+Save the five GAIN-CODING core policies I gave you to your project memory. For each of the five documents run:
+ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the rule in English, including every exception and tie-breaker clause stated in the document> Source: <URL of the document>")
+A rule without its exceptions is misleading, so keep them when they exist. Then check your injected <project-memory> block and confirm the five are present. Finish by telling me the memory IDs you created.
 ```
 
-#### 2. Repository Protection
-
-**[Repository Protection](playbook/policies/repository-protection.md)** — the GitHub settings that enforce the workflow.
+To skip Step 1 on the next session, start the new agent session and check before sending the prompt:
 
 ```text
-Next, read this document fully: {URL}
-It explains the GitHub protection settings that enforce the workflow, including branch protection, merge methods, and restrictions on direct pushes.
-
-After reading:
-1. Confirm that you have read the document.
-2. Summarize which repository protections are enforced.
-3. Do not change any repository settings.
-4. Wait for my next instruction.
+Do you have the five GAIN-CODING core policies in your injected <project-memory> block? Check the block for all five: Core Rules, Repository Protection, Merge Strategy, Branching Model, and Boundaries. If all five are present, tell me which ones you remember and wait for my next instruction. If any are missing, I will give you the five policy documents to read again.
 ```
 
-#### 3. Merge Strategy
-
-**[Merge Strategy](playbook/policies/merge-strategy.md)** — how pull requests enter the target branch for each case.
-
-```text
-Next, read this document fully: {URL}
-It defines how a pull request enters the target branch for each case, including when to use squash, rebase, or merge.
-
-After reading:
-1. Confirm that you have read the document.
-2. Summarize which merge method applies to each case.
-3. Do not merge or modify any pull request.
-4. Wait for my next instruction.
-```
-
-#### 4. Branching Model
-
-**[Branching Model](playbook/policies/branching-model.md)** — the branch layout and how to select the appropriate branch.
-
-```text
-Next, read this document fully: {URL}
-It explains the branch layout and how to select the correct branch prefix for each type of change.
-
-After reading:
-1. Confirm that you have read the document.
-2. Summarize the branching rules.
-3. Do not create or switch branches yet.
-4. Wait for my next instruction.
-```
-
-#### 5. Boundaries
-
-**[Boundaries](playbook/policies/boundaries.md)** — the limits that apply to the agent's operation.
-
-```text
-Next, read this document fully: {URL}
-It defines the boundaries you must respect, including communication language, line wrapping, approval requirements, and the operating environment.
-
-After reading:
-1. Confirm that you have read the document.
-2. Summarize the boundaries you must respect.
-3. Do not take any action yet.
-4. Wait for my next instruction.
-```
-
-> **Magic Context:** If you use Magic Context, these five policies can be saved to memory once. Future sessions can start directly from Step 2 as long as the agent's stored context is still valid.
+As long as the stored context stays valid, future sessions can start directly from Step 2. If it does not, repeat Step 1.
 
 ### Step 2 — Choose a Workflow
 
-Choose the workflow that matches the task you want the agent to perform.
+Choose the workflow that matches the task you want the agent to perform. Click any link in the table below to jump straight to its section and its ready-to-copy prompt.
+
+<div align="center">
 
 | What you want to do | Workflow |
 |---------------------|----------|
-| Start a new project from scratch | **Project Bootstrap** |
-| Bring an existing project up to standard | **Workflow Adoption** |
-| Record an idea, feature request, or bug | **Findings and Planning** |
-| Implement a verified GitHub Issue | **Code Implementation** |
-| Recover from a CI failure or Git accident | **CI and Git Rescue** |
-| Handle dependency update PRs | **Dependabot PRs** |
-| Create a new release | **Release Process** |
-| Prepare a repository for public release | **Data Security and Public Readiness** |
-| Need the complete workflow manual | **Workflow Instructions** |
+| [Start a new project from scratch](#start-a-new-project-from-scratch) | **Project Bootstrap** |
+| [Bring an existing project up to standard](#bring-an-existing-project-up-to-standard) | **Workflow Adoption** |
+| [Record an idea, feature request, or bug](#record-an-idea-feature-request-or-bug) | **Findings and Planning** |
+| [Implement a verified GitHub Issue](#implement-a-verified-github-issue) | **Code Implementation** |
+| [Recover from a CI failure or Git accident](#recover-from-a-ci-failure-or-git-accident) | **CI and Git Rescue** |
+| [Handle dependency update PRs](#handle-dependency-update-prs) | **Dependabot PRs** |
+| [Create a new release](#create-a-new-release) | **Release Process** |
+| [Prepare a repository for public release](#prepare-a-repository-for-public-release) | **Data Security and Public Readiness** |
 
-Use the corresponding prompt below.
+</div>
 
-#### Start a New Project from Scratch
+- #### Start a New Project from Scratch
+  
+  **[Project Bootstrap](playbook/workflow/project-bootstrap.md)** — bootstraps a repository from scratch, including structure, guardrails, documentation, `.github`, CI, and repository protection.
+  
+  ```text
+  Read this document fully: {URL}
+  
+  It describes how to bootstrap a new project from scratch.
+  
+  Follow the workflow step by step:
+  1. Initialize the repository.
+  2. Create the required folder structure and guardrail files.
+  3. Prepare the standard documentation.
+  4. Set up the .github templates and CI.
+  5. Apply the required repository protection settings.
+  6. Push the work through the first pull request.
+  
+  Use the template kit at {TEMPLATE_URL} as the source for the guardrail files, issue/PR/release templates, CI workflow, and IMPROVEMENTS item template.
+  
+  Stop at every approval checkpoint described by the workflow and wait for my approval before continuing.
+  ```
+  
+- #### Bring an Existing Project Up to Standard
+  
+  **[Workflow Adoption](playbook/workflow/workflow-adoption.md)** — audits an existing repository and brings it up to the GAIN-CODING workflow standard.
+  
+  ```text
+  Read this document fully: {URL}
+  
+  It describes how to bring an existing repository up to the GAIN-CODING workflow standard.
+  
+  Start by auditing the current repository condition. Record the findings as improvement items and present the audit results to me.
+  
+  Use the template kit at {TEMPLATE_URL} as the reference for the standard files when identifying gaps.
+  
+  Do not modify the repository yet. Present the audit findings first and wait for my approval before applying any change.
+  ```
+  
+- #### Record an Idea, Feature Request, or Bug
+  
+  **[Findings and Planning](playbook/workflow/findings-and-planning.md)** — records, verifies, and tracks feature ideas and bugs in `docs/IMPROVEMENTS.md`.
+  
+  ```text
+  Read this document fully: {URL}
+  
+  It describes how to record, verify, and track improvement ideas.
+  
+  Use the item template at {TEMPLATE_URL} as the format for each item in docs/IMPROVEMENTS.md.
+  
+  Record the idea, prepare the required verification plan, and present the result to me.
+  
+  Do not create a GitHub Issue yet. Wait for my explicit instruction before creating one.
+  ```
+  
+- #### Implement a Verified GitHub Issue
+  
+  **[Code Implementation](playbook/workflow/code-implementation.md)** — implements a verified GitHub Issue through a branch and pull request.
+  
+  ```text
+  Read this document fully: {URL}
+  
+  It describes how to implement a verified GitHub Issue through a branch and pull request.
+  
+  Before making changes:
+  1. Confirm the current repository and branch.
+  2. Confirm the target GitHub Issue.
+  3. Confirm that the issue is verified and ready for implementation.
+  4. Summarize what you understand.
+  5. Wait for my approval before starting implementation.
+  
+  Then follow the workflow step by step.
+  
+  Verify the changes locally according to the project's stack. Show me a behaviour preview and wait for my approval before committing.
+  
+  Keep the verification checklist consistent with the pull request template at {TEMPLATE_URL}.
+  
+  Stop at every approval checkpoint described by the workflow.
+  ```
+  
+- #### Recover from a CI Failure or Git Accident
+  
+  **[CI and Git Rescue](playbook/workflow/ci-and-git-rescue.md)** — recovers from CI failures, accidental commits to `main`, and rejected pushes.
+  
+  ```text
+  Read this document fully: {URL}
+  
+  It describes how to recover from CI failures and Git accidents, including:
+  - a commit that landed on main by mistake;
+  - a rejected push;
+  - a failing CI workflow.
+  
+  First inspect the current repository state and identify which recovery path applies.
+  
+  Present your findings and the proposed recovery path to me before making corrective changes.
+  
+  Follow the appropriate recovery procedure from the document and stop at every approval checkpoint it describes.
+  ```
+  
+- #### Handle Dependency Update PRs
+  
+  **[Dependabot PRs](playbook/workflow/dependabot-prs.md)** — classifies and merges dependency update pull requests.
+  
+  ```text
+  Read this document fully: {URL}
+  
+  It describes how to handle Dependabot pull requests.
+  
+  Inspect the open Dependabot PRs and classify each one as low or high risk.
+  
+  Use the Dependabot configuration at {TEMPLATE_URL} to understand which ecosystems are enabled.
+  
+  Present the classification and recommended action to me.
+  
+  Do not merge anything. Wait for my explicit merge order before proceeding.
+  ```
+  
+- #### Create a New Release
+  
+  **[Release Process](playbook/workflow/release-process.md)** — performs the complete SemVer release process.
+  
+  ```text
+  Read this document fully: {URL}
+  
+  It describes how to cut a release end to end.
+  
+  Follow the release workflow, but do not cross approval gates without my approval.
+  
+  First prepare the required CHANGELOG.md changes and present them to me for approval.
+  
+  After approval:
+  1. Commit the release changes through a branch and pull request.
+  2. Follow the required merge process.
+  3. Tag the appropriate SemVer version.
+  4. Create the official release.
+  
+  Use the release notes template at {TEMPLATE_URL} when creating the release.
+  ```
+  
+- #### Prepare a Repository for Public Release
+  
+  **[Data Security and Public Readiness](playbook/workflow/data-security-and-public-readiness.md)** — audits a repository for sensitive data and other public-release risks.
+  
+  ```text
+  Read this document fully: {URL}
+  
+  It describes how to audit a repository before making it public.
+  
+  Run the pre-publication audit and collect the required evidence.
+  
+  Present the findings to me and stop.
+  
+  Do not change the repository visibility, publish the repository, or remove potentially sensitive data without my explicit approval.
+  ```
 
-**[Project Bootstrap](playbook/workflow/project-bootstrap.md)** — bootstraps a repository from scratch, including structure, guardrails, documentation, `.github`, CI, and repository protection.
-
-```text
-Read this document fully: {URL}
-
-It describes how to bootstrap a new project from scratch.
-
-Follow the workflow step by step:
-1. Initialize the repository.
-2. Create the required folder structure and guardrail files.
-3. Prepare the standard documentation.
-4. Set up the .github templates and CI.
-5. Apply the required repository protection settings.
-6. Push the work through the first pull request.
-
-Use the template kit at {TEMPLATE_URL} as the source for the guardrail files, issue/PR/release templates, CI workflow, and IMPROVEMENTS item template.
-
-Stop at every approval checkpoint described by the workflow and wait for my approval before continuing.
-```
-
-#### Bring an Existing Project Up to Standard
-
-**[Workflow Adoption](playbook/workflow/workflow-adoption.md)** — audits an existing repository and brings it up to the GAIN-CODING workflow standard.
-
-```text
-Read this document fully: {URL}
-
-It describes how to bring an existing repository up to the GAIN-CODING workflow standard.
-
-Start by auditing the current repository condition. Record the findings as improvement items and present the audit results to me.
-
-Use the template kit at {TEMPLATE_URL} as the reference for the standard files when identifying gaps.
-
-Do not modify the repository yet. Present the audit findings first and wait for my approval before applying any change.
-```
-
-#### Record and Track an Improvement Idea
-
-**[Findings and Planning](playbook/workflow/findings-and-planning.md)** — records, verifies, and tracks feature ideas and bugs in `docs/IMPROVEMENTS.md`.
-
-```text
-Read this document fully: {URL}
-
-It describes how to record, verify, and track improvement ideas.
-
-Use the item template at {TEMPLATE_URL} as the format for each item in docs/IMPROVEMENTS.md.
-
-Record the idea, prepare the required verification plan, and present the result to me.
-
-Do not create a GitHub Issue yet. Wait for my explicit instruction before creating one.
-```
-
-#### Implement a Verified Issue
-
-**[Code Implementation](playbook/workflow/code-implementation.md)** — implements a verified GitHub Issue through a branch and pull request.
-
-```text
-Read this document fully: {URL}
-
-It describes how to implement a verified GitHub Issue through a branch and pull request.
-
-Before making changes:
-1. Confirm the current repository and branch.
-2. Confirm the target GitHub Issue.
-3. Confirm that the issue is verified and ready for implementation.
-4. Summarize what you understand.
-5. Wait for my approval before starting implementation.
-
-Then follow the workflow step by step.
-
-Verify the changes locally according to the project's stack. Show me a behaviour preview and wait for my approval before committing.
-
-Keep the verification checklist consistent with the pull request template at {TEMPLATE_URL}.
-
-Stop at every approval checkpoint described by the workflow.
-```
-
-#### Recover from CI Failure or Git Accidents
-
-**[CI and Git Rescue](playbook/workflow/ci-and-git-rescue.md)** — recovers from CI failures, accidental commits to `main`, and rejected pushes.
-
-```text
-Read this document fully: {URL}
-
-It describes how to recover from CI failures and Git accidents, including:
-- a commit that landed on main by mistake;
-- a rejected push;
-- a failing CI workflow.
-
-First inspect the current repository state and identify which recovery path applies.
-
-Present your findings and the proposed recovery path to me before making corrective changes.
-
-Follow the appropriate recovery procedure from the document and stop at every approval checkpoint it describes.
-```
-
-#### Handle a Dependabot PR
-
-**[Dependabot PRs](playbook/workflow/dependabot-prs.md)** — classifies and merges dependency update pull requests.
-
-```text
-Read this document fully: {URL}
-
-It describes how to handle Dependabot pull requests.
-
-Inspect the open Dependabot PRs and classify each one as low or high risk.
-
-Use the Dependabot configuration at {TEMPLATE_URL} to understand which ecosystems are enabled.
-
-Present the classification and recommended action to me.
-
-Do not merge anything. Wait for my explicit merge order before proceeding.
-```
-
-#### Cut a Release
-
-**[Release Process](playbook/workflow/release-process.md)** — performs the complete SemVer release process.
-
-```text
-Read this document fully: {URL}
-
-It describes how to cut a release end to end.
-
-Follow the release workflow, but do not cross approval gates without my approval.
-
-First prepare the required CHANGELOG.md changes and present them to me for approval.
-
-After approval:
-1. Commit the release changes through a branch and pull request.
-2. Follow the required merge process.
-3. Tag the appropriate SemVer version.
-4. Create the official release.
-
-Use the release notes template at {TEMPLATE_URL} when creating the release.
-```
-
-#### Prepare a Repository for Public Release
-
-**[Data Security and Public Readiness](playbook/workflow/data-security-and-public-readiness.md)** — audits a repository for sensitive data and other public-release risks.
-
-```text
-Read this document fully: {URL}
-
-It describes how to audit a repository before making it public.
-
-Run the pre-publication audit and collect the required evidence.
-
-Present the findings to me and stop.
-
-Do not change the repository visibility, publish the repository, or remove potentially sensitive data without my explicit approval.
-```
-
-#### Get the Full Picture
+### Optional Flow — Get the Full Picture
 
 **[Workflow Instructions](playbook/README.md)** — the complete GAIN-CODING manual containing policies, operating procedures, format conventions, and templates.
 
@@ -366,78 +339,34 @@ Do not modify the repository or execute any workflow yet.
 After reading, summarize the workflow structure and wait for my instruction on which flow to run.
 ```
 
-### Workflow Map
+## Workflow Map
 
-The workflows are designed to form a continuous development lifecycle rather than a collection of unrelated procedures:
+The workflows are designed to form a continuous development lifecycle rather than a collection of unrelated procedures. The map is not a fixed blueprint — it is simply how I run the lifecycle in my own environment, and anyone adapting this repository is welcome to reshape it to fit their own:
 
-```text
-                +---------------------------+
-                |      New Project          |
-                |    Project Bootstrap      |
-                +-------------+-------------+
-                              |
-                              v
-                +---------------------------+
-                |   Existing Repository     |
-                |    Workflow Adoption      |
-                +-------------+-------------+
-                              |
-                              v
-                +---------------------------+
-                |      Idea / Bug           |
-                |   Findings & Planning     |
-                +-------------+-------------+
-                              |
-                              v
-                         GitHub Issue
-                              |
-                              v
-                +---------------------------+
-                |   Code Implementation     |
-                +-------------+-------------+
-                              |
-                              v
-                         Pull Request
-                              |
-               +--------------+--------------+
-               |                             |
-               v                             v
-            CI passes                   CI fails
-               |                             |
-               |                             v
-               |                    CI and Git Rescue
-               |
-               v
-              Merge
-                |
-                v
-          Release Process
+<div align="center">
+
+```mermaid
+flowchart TD
+    A["Project Bootstrap"] --> C{"Publish the repository publicly?"}
+    B["Workflow Adoption"] --> C
+    C -->|yes| M["Data Security and Public Readiness"]
+    M --> D["Findings and Planning"]
+    C -->|no| D
+    D --> E[/"GitHub Issue"/]
+    E --> F["Code Implementation"]
+    F --> G[/"Pull Request"/]
+    G --> H{"CI"}
+    H -->|passes| I["Merge"]
+    H -->|fails| J["CI and Git Rescue"]
+    J --> H
+    I --> K["Release Process"]
+    L["Dependabot PRs"]
+    L --> G
 ```
 
-Other workflows operate alongside this main path:
+</div>
 
-- **Dependabot PRs** handles dependency update pull requests.
-- **Data Security and Public Readiness** prepares a repository for public release.
-- **CI and Git Rescue** handles failures and unexpected Git states wherever they occur.
-
-### Context Loading Rules
-
-GAIN-CODING is intentionally designed around **progressive context loading**.
-
-Follow these rules:
-
-1. **Do not give the agent the entire repository by default.**
-2. Load the five core policies only when they are not already available in the agent's memory or context.
-3. Load **one workflow document** that matches the current task.
-4. Load only the templates, specifications, or supporting documents explicitly required by that workflow.
-5. Do not ask the agent to read unrelated workflows unless the current task actually depends on them.
-6. Use **Workflow Instructions** when you need the complete picture, not as the default starting point.
-
-The goal is simple:
-
-> **Give the agent enough context to follow the rules, but not so much context that the rules become noise.**
-
-### Approval Gates
+## Approval Gates
 
 GAIN-CODING separates **execution** from **decision-making**.
 
@@ -463,9 +392,7 @@ The agent must wait for the user's approval when the workflow requires a decisio
 - publishing a release;
 - taking a recovery action where multiple paths are possible.
 
-**When in doubt, stop and ask.**
-
-The workflow documents define the exact approval checkpoints for each operation.
+The workflow documents define the exact approval checkpoints for each operation; where they are not clear, the agent stops and asks rather than guessing.
 
 ## Contributing
 
