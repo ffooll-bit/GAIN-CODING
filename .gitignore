@@ -26,6 +26,9 @@ temp/
 ARCHITECTURE.md
 STRUCTURE.md
 
+# Tooling reports
+reports/
+
 # Local scratch
 *.log
 *.tmp

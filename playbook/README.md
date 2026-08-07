@@ -41,4 +41,4 @@ Use [templates/](templates/README.md) to scaffold a new project, copying and ada
 
 ## Reference Environment
 
-The workflow was validated against this environment: Windows OS, Visual Studio Code, OpenCode, Magic Context, GitHub CLI (`gh`), the DeepSeek V4 Flash Free model, and the ponytail skill. Fit is not guaranteed outside it — see the disclaimer in [README.md](../README.md#disclaimer).
+The workflow was validated against this environment: Windows OS, Visual Studio Code, OpenCode, Magic Context, GitHub CLI (`gh`), the DeepSeek V4 Flash Free model, and the ponytail skill. Fit is not guaranteed outside it. Magic Context generates `ARCHITECTURE.md` and `STRUCTURE.md` during dream sessions; they are tracked but not hand-written by the AGENT (see [Standard Docs](conventions/standard-docs.md)).
