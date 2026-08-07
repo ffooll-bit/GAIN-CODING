@@ -7,7 +7,7 @@ The merge method choice is decided per PR, not per repository, with the followin
 3. PR on a branch **shared by 2+ collaborators** (team feature worked on together) → **merge commit** (`gh pr merge --merge --delete-branch`). The integration trace of the collaboration is preserved as one unit; the accepted reasonable trade-off is that `main` is no longer purely linear in this scenario.
 4. PR that **contains only 1 commit** → just **squash merge** (the result is identical to rebase for a single commit).
 
-Note: the merge method and the branch model are two independent decisions. The merge method determines *how* one PR enters the target branch, while the branch model determines *from where to where* the PR flow goes (see Branching Model).
+Note: the merge method and the branch model are two independent decisions. The merge method determines *how* one PR enters the target branch, while the branch model determines *from where to where* the PR flow goes.
 
 ## Decision Matrix
 

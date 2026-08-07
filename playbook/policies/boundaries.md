@@ -2,7 +2,7 @@
 
 ## Communication Language
 
-Conversation, discussion, and work instructions between USER and AGENT follow the language the USER uses (can be Bahasa Indonesia or English). However, all text that goes into project documentation files (code, script comments, Git commit messages, issue body, `IMPROVEMENTS.md`, `README`, and other formal documents) must be written in International English because it will be read publicly. UI element language is flexible and follows USER requests, whether the UI is in English or Bahasa Indonesia.
+Conversation, discussion, and work instructions between USER and AGENT follow the language the USER uses. However, all text that goes into project documentation files (code, script comments, Git commit messages, issue body, `IMPROVEMENTS.md`, `README`, and other formal documents) must be written in International English because it will be read publicly. UI element language is flexible and follows USER requests. Content written into the agent's project memory (Magic Context) is also in International English.
 
 ## Line Wrapping Rule (No Hardwrapping)
 

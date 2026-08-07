@@ -67,10 +67,10 @@ If they are already available, skip this step. Otherwise, load the following doc
 Start by sending the prompt below, which tells the agent what is about to happen and how to behave:
 
 ```text
-I will now give you the five core policies of this project, one at a time, in order. For each document:
+You are working in a Windows environment with Visual Studio Code and OpenCode, using Magic Context for memory, the GitHub CLI (`gh`) for repository operations, the ponytail skill to keep things simple, and DeepSeek V4 Flash Free as your primary agent model. I will now give you the five core policies of this project, one at a time, in order. For each document:
 
 1. Read it fully.
-2. Confirm that you have read it and summarize its rules and exceptions in 1-2 sentences.
+2. Confirm that you have read it and summarize its rules, exceptions, and tie-breakers in 1-2 sentences.
 3. Do not offer analysis, suggestions, or proposals yet.
 4. Wait for the next document.
 
@@ -104,7 +104,7 @@ Context is given to you progressively, on purpose. You do not need to find it yo
 
    ```text
    Read this document fully: {URL}
-   It explains the branch layout and how to select the correct branch prefix for each type of change.
+   It explains the branch layout, the basic flow, and which branch model to choose for a project.
    ```
 
 5. #### **[Boundaries](playbook/policies/boundaries.md)** — the limits that apply to the agent's operation.
@@ -119,7 +119,7 @@ Context is given to you progressively, on purpose. You do not need to find it yo
 Magic Context only helps **across sessions**, not within the current one. In this session the five policies are already loaded into the agent's context, so nothing needs saving here. To let the next session skip Step 1, ask the agent to save the policies to its project memory once Step 1 finishes:
 
 ```text
-Save the five GAIN-CODING core policies I gave you to your project memory. For each of the five documents run:
+Save the five core policies of this project I gave you to your project memory. For each of the five documents run:
 ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the rule in English, including every exception and tie-breaker clause stated in the document> Source: <URL of the document>")
 A rule without its exceptions is misleading, so keep them when they exist. Then check your injected <project-memory> block and confirm the five are present. Finish by telling me the memory IDs you created.
 ```
@@ -127,7 +127,7 @@ A rule without its exceptions is misleading, so keep them when they exist. Then 
 To skip Step 1 on the next session, start the new agent session and check before sending the prompt:
 
 ```text
-Do you have the five GAIN-CODING core policies in your injected <project-memory> block? Check the block for all five: Core Rules, Repository Protection, Merge Strategy, Branching Model, and Boundaries. If all five are present, tell me which ones you remember and wait for my next instruction. If any are missing, I will give you the five policy documents to read again.
+Do you have the five core policies of this project in your injected <project-memory> block? Check the block for all five: Core Rules, Repository Protection, Merge Strategy, Branching Model, and Boundaries. If all five are present, tell me which ones you remember and wait for my next instruction. If any are missing, I will give you the five policy documents to read again.
 ```
 
 As long as the stored context stays valid, future sessions can start directly from Step 2. If it does not, repeat Step 1.
