@@ -62,72 +62,56 @@ GAIN-CODING is a **workflow knowledge base for AI-assisted development**. You do
 
 At the beginning of a new session, make sure the agent has the five core policies available in its context or memory.
 
-If they are already available, skip this step. Otherwise, load the following documents **one at a time, in order**, and wait for the agent to confirm each before providing the next:
+If they are already available, skip this step. Otherwise, load the following documents **one at a time, in order**, and wait for the agent to confirm each before providing the next. Keep the agent in **plan mode** for this whole step, not build mode, so it cannot execute anything — it only reads, confirms, and waits.
+
+Start by sending the prompt below, which tells the agent what is about to happen and how to behave:
+
+```text
+I will now give you the five core policies of this project, one at a time, in order. For each document:
+
+1. Read it fully.
+2. Confirm that you have read it and summarize its rules and exceptions in 1-2 sentences.
+3. Do not offer analysis, suggestions, or proposals yet.
+4. Wait for the next document.
+
+Read only the document I give you. Do not open other files, follow links, or search for additional context — if you need more information, I will provide it in a later step. Some documents may feel incomplete on their own; remember them as-is, and the full picture will become clear as the following documents arrive.
+
+Context is given to you progressively, on purpose. You do not need to find it yourself — just read, understand, and wait.
+```
 
 1. #### **[Core Rules](playbook/policies/core-rules.md)** — the workflow principles that cannot be bypassed.
 
    ```text
    Read this document fully: {URL}
-   It defines the workflow principles that cannot be bypassed in this project.
-   You must follow them for the rest of this session.
-   
-   After reading:
-   1. Confirm that you have read the document.
-   2. Summarize the core rules in 1-2 sentences.
-   3. Do not take any action yet.
-   4. Wait for my next instruction.
+   It defines the workflow principles you must follow for the rest of this session.
    ```
 
 2. #### **[Repository Protection](playbook/policies/repository-protection.md)** — the GitHub settings that enforce the workflow.
 
    ```text
-   Next, read this document fully: {URL}
+   Read this document fully: {URL}
    It explains the GitHub protection settings that enforce the workflow, including branch protection, merge methods, and restrictions on direct pushes.
-   
-   After reading:
-   1. Confirm that you have read the document.
-   2. Summarize which repository protections are enforced.
-   3. Do not change any repository settings.
-   4. Wait for my next instruction.
    ```
 
 3. #### **[Merge Strategy](playbook/policies/merge-strategy.md)** — how pull requests enter the target branch for each case.
 
    ```text
-   Next, read this document fully: {URL}
+   Read this document fully: {URL}
    It defines how a pull request enters the target branch for each case, including when to use squash, rebase, or merge.
-   
-   After reading:
-   1. Confirm that you have read the document.
-   2. Summarize which merge method applies to each case.
-   3. Do not merge or modify any pull request.
-   4. Wait for my next instruction.
    ```
 
 4. #### **[Branching Model](playbook/policies/branching-model.md)** — the branch layout and how to select the appropriate branch.
 
    ```text
-   Next, read this document fully: {URL}
+   Read this document fully: {URL}
    It explains the branch layout and how to select the correct branch prefix for each type of change.
-   
-   After reading:
-   1. Confirm that you have read the document.
-   2. Summarize the branching rules.
-   3. Do not create or switch branches yet.
-   4. Wait for my next instruction.
    ```
 
 5. #### **[Boundaries](playbook/policies/boundaries.md)** — the limits that apply to the agent's operation.
 
    ```text
-   Next, read this document fully: {URL}
+   Read this document fully: {URL}
    It defines the boundaries you must respect, including communication language, line wrapping, approval requirements, and the operating environment.
-   
-   After reading:
-   1. Confirm that you have read the document.
-   2. Summarize the boundaries you must respect.
-   3. Do not take any action yet.
-   4. Wait for my next instruction.
    ```
 
 ### Optional Step — Save the Policies to Memory (Magic Context)
@@ -148,9 +132,19 @@ Do you have the five GAIN-CODING core policies in your injected <project-memory>
 
 As long as the stored context stays valid, future sessions can start directly from Step 2. If it does not, repeat Step 1.
 
+> This step can stay in **plan mode**. I have verified that the ctx tools keep working while plan mode is active, because they write to an external database rather than to the project. If you are not sure about your environment, build mode works just as well.
+
 ### Step 2 — Choose a Workflow
 
-Choose the workflow that matches the task you want the agent to perform. Click any link in the table below to jump straight to its section and its ready-to-copy prompt.
+In this step you introduce the workflow the agent will run. Each workflow is executed case by case: you drive, and the agent stops after each case and waits. All workflows run in **plan mode**; switch to **build mode** only when a specific case requires it to make changes (for example, creating files, running a command, or opening a pull request), and return to plan mode as soon as the case is done.
+
+```text
+You now have the five core policies loaded. We are moving to the next phase: reading and implementing a workflow document.
+
+Reply READY once you are ready to receive the workflow document.
+```
+
+Once the agent replies READY, choose the workflow that matches the task you want the agent to perform. Click any link in the table below to jump straight to its section and its ready-to-copy prompt.
 
 <div align="center">
 
@@ -176,17 +170,14 @@ Choose the workflow that matches the task you want the agent to perform. Click a
   
   It describes how to bootstrap a new project from scratch.
   
-  Follow the workflow step by step:
-  1. Initialize the repository.
-  2. Create the required folder structure and guardrail files.
-  3. Prepare the standard documentation.
-  4. Set up the .github templates and CI.
-  5. Apply the required repository protection settings.
-  6. Push the work through the first pull request.
-  
   Use the template kit at {TEMPLATE_URL} as the source for the guardrail files, issue/PR/release templates, CI workflow, and IMPROVEMENTS item template.
   
-  Stop at every approval checkpoint described by the workflow and wait for my approval before continuing.
+  Do not execute anything yet — we are in plan mode. Read the flow, understand it, and memorize it. We will run the flow case by case after you have finished.
+  
+  After reading, present the cases the workflow contains, then save the workflow to your project memory:
+  ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
+  
+  Then wait for my first case.
   ```
   
 - #### Bring an Existing Project Up to Standard
@@ -198,11 +189,14 @@ Choose the workflow that matches the task you want the agent to perform. Click a
   
   It describes how to bring an existing repository up to the GAIN-CODING workflow standard.
   
-  Start by auditing the current repository condition. Record the findings as improvement items and present the audit results to me.
-  
   Use the template kit at {TEMPLATE_URL} as the reference for the standard files when identifying gaps.
   
-  Do not modify the repository yet. Present the audit findings first and wait for my approval before applying any change.
+  Do not execute anything yet — we are in plan mode. Read the flow, understand it, and memorize it. We will run the flow case by case after you have finished.
+  
+  After reading, present the cases the workflow contains, then save the workflow to your project memory:
+  ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
+  
+  Then wait for my first case.
   ```
   
 - #### Record an Idea, Feature Request, or Bug
@@ -216,9 +210,12 @@ Choose the workflow that matches the task you want the agent to perform. Click a
   
   Use the item template at {TEMPLATE_URL} as the format for each item in docs/IMPROVEMENTS.md.
   
-  Record the idea, prepare the required verification plan, and present the result to me.
+  Do not execute anything yet — we are in plan mode. Read the flow, understand it, and memorize it. We will run the flow case by case after you have finished.
   
-  Do not create a GitHub Issue yet. Wait for my explicit instruction before creating one.
+  After reading, present the cases the workflow contains, then save the workflow to your project memory:
+  ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
+  
+  Then wait for my first case.
   ```
   
 - #### Implement a Verified GitHub Issue
@@ -230,20 +227,14 @@ Choose the workflow that matches the task you want the agent to perform. Click a
   
   It describes how to implement a verified GitHub Issue through a branch and pull request.
   
-  Before making changes:
-  1. Confirm the current repository and branch.
-  2. Confirm the target GitHub Issue.
-  3. Confirm that the issue is verified and ready for implementation.
-  4. Summarize what you understand.
-  5. Wait for my approval before starting implementation.
-  
-  Then follow the workflow step by step.
-  
-  Verify the changes locally according to the project's stack. Show me a behaviour preview and wait for my approval before committing.
-  
   Keep the verification checklist consistent with the pull request template at {TEMPLATE_URL}.
   
-  Stop at every approval checkpoint described by the workflow.
+  Do not execute anything yet — we are in plan mode. Read the flow, understand it, and memorize it. We will run the flow case by case after you have finished.
+  
+  After reading, present the cases the workflow contains, then save the workflow to your project memory:
+  ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
+  
+  Then wait for my first case.
   ```
   
 - #### Recover from a CI Failure or Git Accident
@@ -258,11 +249,12 @@ Choose the workflow that matches the task you want the agent to perform. Click a
   - a rejected push;
   - a failing CI workflow.
   
-  First inspect the current repository state and identify which recovery path applies.
+  Do not execute anything yet — we are in plan mode. Read the flow, understand it, and memorize it. We will run the flow case by case after you have finished.
   
-  Present your findings and the proposed recovery path to me before making corrective changes.
+  After reading, present the cases the workflow contains, then save the workflow to your project memory:
+  ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
   
-  Follow the appropriate recovery procedure from the document and stop at every approval checkpoint it describes.
+  Then wait for my first case.
   ```
   
 - #### Handle Dependency Update PRs
@@ -274,13 +266,14 @@ Choose the workflow that matches the task you want the agent to perform. Click a
   
   It describes how to handle Dependabot pull requests.
   
-  Inspect the open Dependabot PRs and classify each one as low or high risk.
-  
   Use the Dependabot configuration at {TEMPLATE_URL} to understand which ecosystems are enabled.
   
-  Present the classification and recommended action to me.
+  Do not execute anything yet — we are in plan mode. Read the flow, understand it, and memorize it. We will run the flow case by case after you have finished.
   
-  Do not merge anything. Wait for my explicit merge order before proceeding.
+  After reading, present the cases the workflow contains, then save the workflow to your project memory:
+  ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
+  
+  Then wait for my first case.
   ```
   
 - #### Create a New Release
@@ -292,17 +285,14 @@ Choose the workflow that matches the task you want the agent to perform. Click a
   
   It describes how to cut a release end to end.
   
-  Follow the release workflow, but do not cross approval gates without my approval.
-  
-  First prepare the required CHANGELOG.md changes and present them to me for approval.
-  
-  After approval:
-  1. Commit the release changes through a branch and pull request.
-  2. Follow the required merge process.
-  3. Tag the appropriate SemVer version.
-  4. Create the official release.
-  
   Use the release notes template at {TEMPLATE_URL} when creating the release.
+  
+  Do not execute anything yet — we are in plan mode. Read the flow, understand it, and memorize it. We will run the flow case by case after you have finished.
+  
+  After reading, present the cases the workflow contains, then save the workflow to your project memory:
+  ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
+  
+  Then wait for my first case.
   ```
   
 - #### Prepare a Repository for Public Release
@@ -314,11 +304,12 @@ Choose the workflow that matches the task you want the agent to perform. Click a
   
   It describes how to audit a repository before making it public.
   
-  Run the pre-publication audit and collect the required evidence.
+  Do not execute anything yet — we are in plan mode. Read the flow, understand it, and memorize it. We will run the flow case by case after you have finished.
   
-  Present the findings to me and stop.
+  After reading, present the cases the workflow contains, then save the workflow to your project memory:
+  ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
   
-  Do not change the repository visibility, publish the repository, or remove potentially sensitive data without my explicit approval.
+  Then wait for my first case.
   ```
 
 ### Optional Flow — Get the Full Picture
