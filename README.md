@@ -207,12 +207,12 @@ Once the agent replies READY, choose the workflow that matches the task you want
   
 - #### Bring an Existing Project Up to Standard
   
-  **[Workflow Adoption](playbook/workflow/workflow-adoption.md)** — audits an existing repository and brings it up to the GAIN-CODING workflow standard.
+  **[Workflow Adoption](playbook/workflow/workflow-adoption.md)** — audits an existing project (a codebase that may or may not be a GitHub repository yet) and brings it up to the workflow standard defined in the document.
   
   ```text
   Read this document fully: {URL}
   
-  It describes how to bring an existing repository up to the GAIN-CODING workflow standard.
+  It describes how to bring an existing project up to the workflow standard defined in the document.
   ```
   
 - #### Record an Idea, Feature Request, or Bug
