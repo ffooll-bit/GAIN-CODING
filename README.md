@@ -212,7 +212,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   ```text
   Read this document fully: {URL}
   
-  It describes how to bring an existing project up to the workflow standard defined in the document.
+  It describes how to bring an existing project up to the workflow standard defined in the document. The source files you need are linked in the document itself.
   ```
   
 - #### Record an Idea, Feature Request, or Bug

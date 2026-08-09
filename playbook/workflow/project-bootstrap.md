@@ -14,7 +14,7 @@ USER orders the AGENT to prepare the new project. Before creating anything, the 
 
 Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT:
 
-- initializes the repository: create it on GitHub (`gh repo create`) and set it up locally.
+- initializes the repository: create it as a private GitHub repository (`gh repo create <name> --private --add-readme`) and set it up locally — the repository is created private by default; the decision to go public happens later, outside this workflow.
 - creates the base folder structure: `docs/` (documentation), `temp/` (temporary work folder, gitignored), the source code folder (`app/`, `src/`, or per stack) if the project actually has application code.
 - creates the guardrail files at the project root from the template kit:
 
@@ -36,8 +36,8 @@ Once the plan is fixed, USER switches to build mode and orders the AGENT to work
 
 The AGENT **presents the prepared repository to the USER and stops**. No commit yet — this is the review gate.
 
-## Commit and open the first PR
+## Commit and merge the first PR
 
-USER approves the prepared repository and orders the AGENT to commit. The AGENT commits all files, opens the first PR (not directly to `main`), waits for a green CI, and ensures the repository is ready to be published — no sensitive data (tokens, `.env`, internal endpoints) in the history or tracked files.
+USER approves the prepared repository and orders the AGENT to commit. The AGENT commits all files on the `chore/initial-setup` working branch, pushes it, and opens a pull request into `main` — no direct pushes to `main`. The AGENT waits for a green CI (if it fails, it fixes the code locally and pushes a new commit to the same branch), then merges the PR with `gh pr merge --squash --delete-branch --admin` (squash joins the entire setup into one clean commit on `main`), and verifies no sensitive data (tokens, `.env`, internal endpoints) is present in the history or tracked files.
 
 The AGENT **presents the result to the USER and stops**.
