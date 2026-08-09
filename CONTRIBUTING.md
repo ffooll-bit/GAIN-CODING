@@ -4,18 +4,11 @@ This is a **personal-use** repository designed for a specific environment. By co
 
 ## How to Contribute
 
-1. **Open an issue first.** No change happens without a supporting GitHub Issue. Use the standard issue templates for bug reports and feature requests.
-2. **Branch from `main`.** Never push directly to `main`:
-   ```
-   git switch main
-   git pull origin main
-   git checkout -b <prefix>/<description>
-   ```
-3. **Make atomic commits.** Each commit is one logical change, following the [commit convention](playbook/conventions/commit-messages.md). No force-push.
-4. **Open a pull request** that references the issue (`Fixes #N`).
-5. **Await review and approval** before merge.
+1. **Open an issue first.** Before making a change, describe it in a GitHub Issue: an error or inaccuracy you found in a document, or a proposal to improve the knowledge base.
+2. **Open a pull request that references the issue.** Your contribution is Markdown documentation — the standards below define its format.
+3. **Await review** before the change is applied.
 
 ## Documentation Standards
 
-- All documentation is written in International English, no hardwrapping, `UTF-8` without BOM, `LF` line endings. See the [documentation convention](playbook/conventions/documentation.md).
-- Keep the decision matrices and selection tables consistent with the policies they explain.
+- All documentation is written in International English, no hardwrapping, `UTF-8` without BOM, `LF` line endings.
+- Decision matrices and selection tables must stay consistent with the text they describe — when the rules change, the table changes with them.
