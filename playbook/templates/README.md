@@ -14,7 +14,7 @@ This folder contains the reusable scaffolding for a new project following the GA
 | `.github/PULL_REQUEST_TEMPLATE.md` | project root `.github/PULL_REQUEST_TEMPLATE.md` (adjust checklist to stack) |
 | `.github/RELEASE_NOTES_TEMPLATE.md` | project root `.github/RELEASE_NOTES_TEMPLATE.md` |
 | `.github/workflows/ci.yml` | project root `.github/workflows/ci.yml` (adjust jobs to stack) |
-| `docs/IMPROVEMENTS_ITEM_TEMPLATE.md` | reference while filling `docs/IMPROVEMENTS.md` |
+| `docs/IMPROVEMENTS.md` | project root `docs/IMPROVEMENTS.md` |
 
 The workflow documents that explain how these files are used live in [Workflow Instructions](../README.md). The lifecycle for these artifacts is defined in Project Bootstrap (steps 1-3).
 
