@@ -14,30 +14,30 @@ USER orders the AGENT to prepare the new project. Before creating anything, the 
 
 Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT:
 
-- initializes the repository: create it on GitHub (`gh repo create`) and set it up locally
-- creates the base folder structure: `docs/` (documentation), `temp/` (temporary work folder, gitignored), the source code folder (`app/`, `src/`, or per stack) if the project actually has application code
-- creates the guardrail files at the root from the template kit:
+- initializes the repository: create it on GitHub (`gh repo create`) and set it up locally.
+- creates the base folder structure: `docs/` (documentation), `temp/` (temporary work folder, gitignored), the source code folder (`app/`, `src/`, or per stack) if the project actually has application code.
+- creates the guardrail files at the project root from the template kit:
 
-  - [`.gitignore`](../templates/guardrail/.gitignore) → project root — ignores OS, editor, Python, and Node artifacts, the `temp/` folder, and local logs. Extend it with ignores specific to the project's stack.
-  - [`.editorconfig`](../templates/guardrail/.editorconfig) → project root — enforces `LF` line endings and `UTF-8` without BOM. Keep it as-is.
-  - [`.gitattributes`](../templates/guardrail/.gitattributes) → project root — normalizes line endings to `LF` on checkout. Keep it as-is.
+  - [`guardrail/.gitignore`](../templates/guardrail/.gitignore) → `.gitignore` at the project root — ignores OS, editor, Python, and Node artifacts, the `temp/` folder, and local logs. Extend it with ignores specific to the project's stack.
+  - [`guardrail/.editorconfig`](../templates/guardrail/.editorconfig) → `.editorconfig` at the project root — enforces `LF` line endings and `UTF-8` without BOM. Keep it as-is.
+  - [`guardrail/.gitattributes`](../templates/guardrail/.gitattributes) → `.gitattributes` at the project root — normalizes line endings to `LF` on checkout. Keep it as-is.
 
-- creates the standard documentation following Standard Docs and CHANGELOG: `README.md`, `CHANGELOG.md`, `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md` — `ARCHITECTURE.md` and `STRUCTURE.md` are not created here (Magic Context generates them during the first dream session; the AGENT does not hand-write them)
+- creates the standard documentation at the project root: `README.md` (project front page: badges, quick start, screenshot when present), `CHANGELOG.md` copied from the [`docs/CHANGELOG.md`](../templates/docs/CHANGELOG.md) template (release history, `Unreleased` on top), `LICENSE` (MIT or another license per need; follows the standard license format, hardwrapping allowed), `CONTRIBUTING.md` (contribution rules and the workflow that applies in this project), `CODE_OF_CONDUCT.md` (Contributor Covenant), and `SECURITY.md` (how to report security vulnerabilities and the response policy) — `ARCHITECTURE.md` and `STRUCTURE.md` are not created here (Magic Context generates them during the first dream session; the AGENT does not hand-write them, and updates them only when the architecture or structure changes significantly).
 - prepares the `.github` folder from the template kit:
 
   - [`.github/workflows/ci.yml`](../templates/.github/workflows/ci.yml) → `.github/workflows/ci.yml` — a CI `build` job that fails on `CRLF` line endings or a UTF-8 BOM in Markdown files. Copy it as-is.
-  - [`.github/ISSUE_TEMPLATE/bug_report.md`](../templates/.github/ISSUE_TEMPLATE/bug_report.md), [`feature_request.md`](../templates/.github/ISSUE_TEMPLATE/feature_request.md), and [`config.yml`](../templates/.github/ISSUE_TEMPLATE/config.yml) → `.github/ISSUE_TEMPLATE/` — the issue templates with their labels (`bug`, `enhancement`) and a security contact link. Replace `<Project Name>` and `<owner>/<repo>` placeholders.
-  - [`.github/PULL_REQUEST_TEMPLATE.md`](../templates/.github/PULL_REQUEST_TEMPLATE.md) → `.github/PULL_REQUEST_TEMPLATE.md` — the PR checklist aligned with the verification steps of Code Implementation. Fill in the placeholder commands for the project's stack.
-  - [`.github/RELEASE_NOTES_TEMPLATE.md`](../templates/.github/RELEASE_NOTES_TEMPLATE.md) → `.github/RELEASE_NOTES_TEMPLATE.md` — the release notes structure per Release Notes Template. Replace `<Project Name>` and pointer placeholders.
+  - [`.github/ISSUE_TEMPLATE/bug_report.md`](../templates/.github/ISSUE_TEMPLATE/bug_report.md), [`.github/ISSUE_TEMPLATE/feature_request.md`](../templates/.github/ISSUE_TEMPLATE/feature_request.md), and [`.github/ISSUE_TEMPLATE/config.yml`](../templates/.github/ISSUE_TEMPLATE/config.yml) → `.github/ISSUE_TEMPLATE/` — the issue templates with their labels (`bug`, `enhancement`) and a security contact link. Replace `<Project Name>` and `<owner>/<repo>` placeholders.
+  - [`.github/PULL_REQUEST_TEMPLATE.md`](../templates/.github/PULL_REQUEST_TEMPLATE.md) → `.github/PULL_REQUEST_TEMPLATE.md` — the PR checklist for the project's standard verification (lint, code-style fixer on changed files, tests, build, route check). Fill in the placeholder commands for the project's stack.
+  - [`.github/RELEASE_NOTES_TEMPLATE.md`](../templates/.github/RELEASE_NOTES_TEMPLATE.md) → `.github/RELEASE_NOTES_TEMPLATE.md` — the release notes structure per Release Notes Template. Replace `<Project Name>`, the version, and `<owner>/<repo>` placeholders.
   - [`.github/dependabot.yml`](../templates/.github/dependabot.yml) → `.github/dependabot.yml` — weekly updates for `composer`, `npm`, and `github-actions`. Keep only the ecosystems the project actually uses.
 
-- creates `docs/IMPROVEMENTS.md` with the lifecycle skeleton and ID scheme (see IMPROVEMENTS Structure), using [docs/IMPROVEMENTS_ITEM_TEMPLATE.md](../templates/docs/IMPROVEMENTS_ITEM_TEMPLATE.md) as the item reference
-- applies all GitHub protection settings from Repository Protection, after getting USER approval per the "Approval of Non-File Changes" boundary, including enabling all three merge methods per Merge Strategy, and ensures Issues are enabled
+- creates `docs/IMPROVEMENTS.md` copied from the [`docs/IMPROVEMENTS.md`](../templates/docs/IMPROVEMENTS.md) template — the tracker for features, bugs, and optimization plans, whose items follow the lifecycle `recorded → verified → Issue → implemented → archived` and IDs `<LABEL_CODE>-<NNN>` (from the default GitHub labels). Each item is recorded under `## Items` using the `### <ID> — <Title>` skeleton from the template.
+- applies all GitHub protection settings through `gh api` / `gh repo edit`, after getting USER approval first (non-file changes are never executed directly): enable Branch Protection on `main`, set the CI status check `build` as a required check, set `enforce_admins=false`, set `delete_branch_on_merge=true`, enable all three merge methods (`merge`, `squash`, `rebase`) — which one is used for a given PR is decided per case — and ensure Issues are enabled.
 
 The AGENT **presents the prepared repository to the USER and stops**. No commit yet — this is the review gate.
 
 ## Commit and open the first PR
 
-USER approves the prepared repository and orders the AGENT to commit. The AGENT commits all files, opens the first PR (not directly to `main`), waits for a green CI, and ensures the repository is ready to be published (see Data Security and Public Readiness).
+USER approves the prepared repository and orders the AGENT to commit. The AGENT commits all files, opens the first PR (not directly to `main`), waits for a green CI, and ensures the repository is ready to be published — no sensitive data (tokens, `.env`, internal endpoints) in the history or tracked files.
 
 The AGENT **presents the result to the USER and stops**.
