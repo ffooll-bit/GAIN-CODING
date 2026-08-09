@@ -2,11 +2,15 @@
 
 ## Communication Language
 
-Conversation, discussion, and work instructions between USER and AGENT follow the language the USER uses. However, all text that goes into project documentation files (code, script comments, Git commit messages, issue body, `IMPROVEMENTS.md`, `README`, and other formal documents) must be written in International English because it will be read publicly. UI element language is flexible and follows USER requests. Content written into the agent's project memory (Magic Context) is also in International English.
+Conversation, discussion, and work instructions between USER and AGENT follow the language the USER uses. However, all text that goes into project documentation files (code, script comments, Git commit messages, issue body, `docs/IMPROVEMENTS.md`, `README.md`, and other formal documents) must be written in International English because it will be read publicly. UI element language is flexible and follows USER requests. Content written into the agent's project memory (Magic Context) is also in International English.
 
 ## Line Wrapping Rule (No Hardwrapping)
 
 In general, manually cutting paragraph text lines inside markdown documents is strictly forbidden. Let text lines continue continuously so reading in modern web/editors stays tidy. Line breaks are only allowed to separate rows in tables, bullet points, or code blocks. An exception is given to documents that conventionally use hardwrapping, for example `LICENSE` which follows the standard format; otherwise use softwrapping.
+
+## Line Endings
+
+All text files use `LF` line endings, enforced by the guardrail files (`.editorconfig` and `.gitattributes`) and re-verified by the CI `build` job.
 
 ## Auto-Stop Between Batches
 
@@ -19,6 +23,10 @@ GitHub settings changes that are not commits (branch protection, visibility, lab
 ## Ask When Ambiguous
 
 If an instruction is unclear, or there is a big choice with significant trade-offs, ask the USER before acting. Do not assume.
+
+## Decision Frameworks
+
+Where a process offers multiple valid paths, prefer a decision matrix or selection table over free-form rules so the choice is deterministic. Keep such tables alongside the process that uses them.
 
 ## Work Folder Isolation
 

@@ -6,7 +6,7 @@ The branch model is a policy about the arrangement of branches used by the proje
 
 - **`main`** — the main and most stable branch. Its content matches the last released version. Releases are cut from `main`.
 - **`dev` / `develop`** — the branch for working on the next release. Its content is a copy of `main` at creation time, then evolves as features are merged. This branch is created when the development direction or goal is clear and several features will be shipped in one release.
-- **Working branches** — `feature/`, `release/`, `fix/`, `hotfix/`, and similar. Flexible branches, generally branched from `main`, but if `dev`/`develop` exists, working branches take from `dev`/`develop` first to work on one feature or one fix that will be part of the next release.
+- **Working branches** — `feature/`, `fix/`, `chore/`, `docs/`, `refactor/` (one Issue per branch), plus `release/`, `hotfix/`, and similar when the model needs them. Flexible branches, generally branched from `main`, but if `dev`/`develop` exists, working branches take from `dev`/`develop` first to work on one feature or one fix that will be part of the next release.
 
 ## Basic Flow
 
