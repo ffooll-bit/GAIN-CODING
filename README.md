@@ -156,7 +156,7 @@ These rules apply to every workflow document from here on:
 - Read the document only. Do not open other files, follow links, or search for additional context.
 - Stay in plan mode — do not execute anything. Read the flow, understand it, and memorize it.
 - Each document defines a sequence of interactions between you (the AGENT) and me (the USER) — I trigger each one, so after each you present the result and stop.
-- After reading, present the interactions the document contains, then save the workflow to your project memory:
+- After reading, present the interactions the document contains, then save the workflow to your project memory only if this workflow is not already saved there — do not store the same workflow twice (this does not limit writing other entries to PROJECT_RULES):
     ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
 - Then wait for my instruction to begin the first interaction.
 
@@ -171,7 +171,7 @@ We are switching to a different workflow. The same Phase 2 rules apply again, so
 - Read only the document I give you. Do not open other files, follow links, or search for additional context.
 - Stay in plan mode — do not execute anything. Read the flow, understand it, and memorize it.
 - Each document defines a sequence of interactions between you (the AGENT) and me (the USER) — I trigger each one, so after each you present the result and stop.
-- After reading, present the interactions the document contains, then save the workflow to your project memory:
+- After reading, present the interactions the document contains, then save the workflow to your project memory only if this workflow is not already saved there — do not store the same workflow twice (this does not limit writing other entries to PROJECT_RULES):
     ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
 - Then wait for my instruction to begin the first interaction.
 
