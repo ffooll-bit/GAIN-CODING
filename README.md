@@ -186,12 +186,12 @@ Once the agent replies READY, choose the workflow that matches the task you want
 |---------------------|----------|
 | [Start a new project from scratch](#start-a-new-project-from-scratch) | **Project Bootstrap** |
 | [Bring an existing project up to standard](#bring-an-existing-project-up-to-standard) | **Workflow Adoption** |
+| [Prepare a repository for public release](#prepare-a-repository-for-public-release) | **Data Security and Public Readiness** |
 | [Record an idea, feature request, or bug](#record-an-idea-feature-request-or-bug) | **Findings and Planning** |
 | [Implement a verified GitHub Issue](#implement-a-verified-github-issue) | **Code Implementation** |
 | [Recover from a CI failure or Git accident](#recover-from-a-ci-failure-or-git-accident) | **CI and Git Rescue** |
-| [Handle dependency update PRs](#handle-dependency-update-prs) | **Dependabot PRs** |
 | [Create a new release](#create-a-new-release) | **Release Process** |
-| [Prepare a repository for public release](#prepare-a-repository-for-public-release) | **Data Security and Public Readiness** |
+| [Handle dependency update PRs](#handle-dependency-update-prs) | **Dependabot PRs** |
 
 </div>
 
@@ -213,6 +213,16 @@ Once the agent replies READY, choose the workflow that matches the task you want
   Read this document fully: {URL}
   
   It describes how to bring an existing project up to the workflow standard defined in the document. The source files you need are linked in the document itself.
+  ```
+  
+- #### Prepare a Repository for Public Release
+  
+  **[Data Security and Public Readiness](playbook/workflow/data-security-and-public-readiness.md)** — audits a repository for sensitive data and other public-release risks.
+  
+  ```text
+  Read this document fully: {URL}
+  
+  It describes how to audit a repository before making it public.
   ```
   
 - #### Record an Idea, Feature Request, or Bug
@@ -248,16 +258,6 @@ Once the agent replies READY, choose the workflow that matches the task you want
   - a failing CI workflow.
   ```
   
-- #### Handle Dependency Update PRs
-  
-  **[Dependabot PRs](playbook/workflow/dependabot-prs.md)** — classifies and merges dependency update pull requests.
-  
-  ```text
-  Read this document fully: {URL}
-  
-  It describes how to handle Dependabot pull requests.
-  ```
-  
 - #### Create a New Release
   
   **[Release Process](playbook/workflow/release-process.md)** — performs the complete SemVer release process.
@@ -268,14 +268,14 @@ Once the agent replies READY, choose the workflow that matches the task you want
   It describes how to cut a release end to end.
   ```
   
-- #### Prepare a Repository for Public Release
+- #### Handle Dependency Update PRs
   
-  **[Data Security and Public Readiness](playbook/workflow/data-security-and-public-readiness.md)** — audits a repository for sensitive data and other public-release risks.
+  **[Dependabot PRs](playbook/workflow/dependabot-prs.md)** — classifies and merges dependency update pull requests.
   
   ```text
   Read this document fully: {URL}
   
-  It describes how to audit a repository before making it public.
+  It describes how to handle Dependabot pull requests.
   ```
 
 ## Workflow Map
