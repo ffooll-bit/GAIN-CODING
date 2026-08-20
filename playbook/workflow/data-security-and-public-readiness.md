@@ -1,8 +1,12 @@
 # Data Security and Public Readiness
 
-> Trigger: The repository will be made public, or there is a suspicion of sensitive data in the commit history.
+Use this workflow when the repository will be made public, or there is a suspicion of sensitive data in the commit history.
 
-1. USER asks to prepare the repository for public. The AGENT runs a pre-publication audit: make sure no sensitive data (such as tokens, passwords, `.env` files, commit history containing logs/internal, database dumps, or real institution names) is left behind. It is important to distinguish: Git history (all past commits) and log files (runtime artifacts) must both be free of sensitive data. The AGENT runs the following checks as evidence:
+This document defines a sequence of interactions between the USER and the AGENT. Each interaction ends with the AGENT presenting the result and stopping; the next starts only when the USER orders it.
+
+## Audit and prepare the repository for public release
+
+USER orders the AGENT to prepare the repository to be made public. First, while still in plan mode, the AGENT runs a pre-publication audit: it ensures no sensitive data (`.env` files, tokens, secrets, internal endpoints, or real institution names — plus passwords, internal logs, and database dumps as additional audit targets) remains. It is important to distinguish: Git history (all past commits) and log files (runtime artifacts) must both be free of sensitive data. The AGENT asks the USER which keywords or strings to search for — the USER knows what sensitive data is suspected — and runs the following checks as evidence:
 
 ```
 # Search for sensitive keywords across the whole history
@@ -13,8 +17,12 @@ git ls-files | Select-String -Pattern "(env|secret|key|credential|password)"
 git log --all --oneline -- .env
 ```
 
-The AGENT **presents the audit results to the USER and stops**.
-2. If sensitive data is found in past commits, USER approves a permanent Git history cleanup. The AGENT removes it using `git-filter-repo` inside an isolated Python virtual environment:
+The AGENT **presents the audit results to the USER and stops**. The USER reviews the results and chooses the next step:
+
+- **Sensitive data found in past commits.** The plan is a permanent Git history cleanup. The USER can review and adjust the plan while staying in plan mode, then switches to build mode and orders the AGENT to work.
+- **No sensitive data found.** There is nothing to purge. The USER switches to build mode and orders the AGENT to proceed with the Make the repository public interaction.
+
+When sensitive data was found, the AGENT removes the sensitive data using `git-filter-repo` inside an isolated Python virtual environment. It creates the `temp/` folder when missing, clones the repository as an emergency mirror, writes the sensitive strings found in the audit into `rules.txt` (one per line), and runs the cleanup:
 
 ```
 # Clone the repository as an emergency mirror
@@ -26,18 +34,25 @@ python -m venv .venv
 pip install git-filter-repo
 git-filter-repo --replace-text rules.txt
 # Make sure the sensitive string is truly gone from the log
-git log -S "your-sensitive-keyword"
-# Force push the new history to the remote server
-# IMPORTANT: This force push is ONLY allowed while the repo is STILL PRIVATE
+git log -S "<keyword>"
+```
+
+`git-filter-repo` removes the `origin` remote by default, so the AGENT re-adds it before pushing. This force push is ONLY allowed while the repository is STILL PRIVATE:
+
+```
+git remote add origin https://github.com/<owner>/<repo>.git
 git push origin --force --all
 git push origin --force --tags
 ```
 
-After the force push, the AGENT syncs the local working repo: remove stale refs (`git fetch --prune`) and reset to the new history, then verify with `git log --all -S "keyword"` (not just `git log`) to make sure no ref still carries sensitive data. The AGENT **presents the results and stops**.
-3. USER approves changing the repo status to public. The AGENT runs the following GitHub CLI command:
+After the force push, the AGENT syncs the local working repo: `git fetch --prune` to remove stale refs, then `git reset --hard origin/main` to reset to the new history, then verifies with `git log --all -S "<keyword>"` (not just `git log`) to make sure no ref still carries sensitive data. The AGENT **presents the purged repository to the USER and stops**. No visibility change yet — this is the review gate.
+
+## Make the repository public
+
+USER approves changing the repository status to public — a visibility change is a non-file change presented for USER approval first — and orders the AGENT to work. The AGENT runs the following GitHub CLI command:
 
 ```
 gh repo edit --visibility public --accept-visibility-change-consequences
 ```
 
-Immediately re-enable all Branch Protection settings on the `main` branch as soon as the repository status changes to public. The AGENT presents the final result to the USER.
+After the change, the AGENT verifies the protection settings are still intact (Branch Protection on `main`, the `build` required check, and the three merge methods). The AGENT **presents the result to the USER and stops**.
