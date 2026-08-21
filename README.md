@@ -253,9 +253,9 @@ Once the agent replies READY, choose the workflow that matches the task you want
   Read this document fully: {URL}
   
   It describes how to recover from CI failures and Git accidents, including:
+  - a failing CI workflow;
   - a commit that landed on main by mistake;
-  - a rejected push;
-  - a failing CI workflow.
+  - a rejected push.
   ```
   
 - #### Create a New Release
