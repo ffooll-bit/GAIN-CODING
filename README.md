@@ -237,7 +237,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   
 - #### Implement Verified Tracker Items
   
-  **[Code Implementation](playbook/workflow/code-implementation.md)** - implements `verified` items from `docs/IMPROVEMENTS.md` through branches, pull requests, and merges.
+  **[Code Implementation](playbook/workflow/code-implementation.md)** — implements `verified` items from `docs/IMPROVEMENTS.md` through branches, pull requests, and merges.
   
   ```text
   Read this document fully: {URL}
@@ -265,9 +265,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   ```text
   Read this document fully: {URL}
   
-  It describes how to cut a release end to end.
-
-  The source files you need are linked in the document itself.
+  It describes how to cut a release end to end. The source files you need are linked in the document itself.
   ```
   
 - #### Handle Dependency Update PRs
@@ -295,14 +293,12 @@ flowchart TD
     C -->|no| D
     D --> E[/"GitHub Issue"/]
     E --> F["Code Implementation"]
-    F --> G[/"Pull Request"/]
-    G --> H{"CI"}
-    H -->|passes| I["Merge"]
+    F --> H{"CI"}
+    H -->|passes| K["Release Process"]
     H -->|fails| J["CI and Git Rescue"]
     J --> H
-    I --> K["Release Process"]
     L["Dependabot PRs"]
-    L --> G
+    L --> H
 ```
 
 </div>
