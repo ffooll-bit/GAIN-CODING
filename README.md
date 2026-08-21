@@ -50,6 +50,8 @@ The honest summary: the agent does the heavy lifting, the rules keep things resp
 
 This repository was created for **personal use** and designed for a specific environment. It is primarily intended for people running a similar setup: Windows, [Visual Studio Code](https://github.com/microsoft/vscode), [OpenCode](https://github.com/anomalyco/opencode), [Magic Context](https://github.com/cortexkit/magic-context), [GitHub CLI](https://github.com/cli/cli) (`gh`), and the [ponytail skill](https://github.com/dietrichgebert/ponytail).
 
+GAIN-CODING was created because I am a free-model user who occasionally feels frustrated having to re-explain my own conventions from scratch each time I start a new project. This knowledge base makes those conventions and rules available directly to the agent in any new project.
+
 Anyone with a similar setup is welcome to adapt, extend, and contribute to this knowledge base, but there is no guarantee that it will work well outside that environment.
 
 ## How to Use
