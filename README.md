@@ -48,7 +48,7 @@ The honest summary: the agent does the heavy lifting, the rules keep things resp
 
 ### Disclaimer
 
-This repository was created for **personal use** and designed for a specific environment. It is primarily intended for people running a similar setup: Windows, [Visual Studio Code](https://github.com/microsoft/vscode), [OpenCode](https://github.com/anomalyco/opencode), [Magic Context](https://github.com/cortexkit/magic-context), [GitHub CLI](https://github.com/cli/cli) (`gh`), the [ponytail skill](https://github.com/dietrichgebert/ponytail), and DeepSeek V4 Flash Free as the primary agent model.
+This repository was created for **personal use** and designed for a specific environment. It is primarily intended for people running a similar setup: Windows, [Visual Studio Code](https://github.com/microsoft/vscode), [OpenCode](https://github.com/anomalyco/opencode), [Magic Context](https://github.com/cortexkit/magic-context), [GitHub CLI](https://github.com/cli/cli) (`gh`), and the [ponytail skill](https://github.com/dietrichgebert/ponytail).
 
 Anyone with a similar setup is welcome to adapt, extend, and contribute to this knowledge base, but there is no guarantee that it will work well outside that environment.
 
@@ -67,7 +67,7 @@ If they are already available, skip this phase. Otherwise, load the following do
 Start by sending the prompt below, which tells the agent what is about to happen and how to behave:
 
 ```text
-You are working in a Windows environment with Visual Studio Code and OpenCode, using Magic Context for memory, the GitHub CLI (`gh`) for repository operations, the ponytail skill to keep things simple, and DeepSeek V4 Flash Free as your primary agent model. This session runs in two context-loading phases before any work begins:
+You are working in a Windows environment with Visual Studio Code and OpenCode, using Magic Context for memory, the GitHub CLI (`gh`) for repository operations, and the ponytail skill to keep things simple. This session runs in two context-loading phases before any work begins:
 
 - Phase 1 — the core policies: I give you the five core policies of this project, one at a time, in order. This happens once, at the start of the session.
 - Phase 2 — the workflow: once the policies are loaded, I give you a workflow document that defines the interactions between us. This may happen again during the session whenever we switch to a different workflow.
@@ -330,6 +330,26 @@ The agent must wait for the user's approval when the workflow requires a decisio
 - taking a recovery action where multiple paths are possible.
 
 The workflow documents define the exact approval checkpoints for each operation; where they are not clear, the agent stops and asks rather than guessing.
+
+## Tested Models
+
+GAIN-CODING is model-agnostic documentation, but every claim needs evidence. This table tracks which agent models have actually run the workflow:
+
+<div align="center">
+
+| Model | Status | Notes |
+|-------|--------|-------|
+| Big Pickle | In testing | First end-to-end run in progress |
+
+</div>
+
+Status legend:
+
+- **In testing**: a run has started
+- **Passed**: Phase 1 plus at least one workflow completed end to end
+- **Issues found**: completed with problems, described in Notes
+
+Ran it on another model? Open an issue or send a pull request updating this table.
 
 ## Contributing
 
