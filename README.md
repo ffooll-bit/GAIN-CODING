@@ -232,7 +232,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   ```text
   Read this document fully: {URL}
   
-  It describes how to record, verify, and track improvement ideas.
+  It describes how to record, verify, and track improvement ideas. The source files you need are linked in the document itself.
   ```
   
 - #### Implement a Verified GitHub Issue

@@ -1,14 +1,63 @@
 # Findings and Planning
 
-> Trigger: Every time there is a new feature idea, a found bug, or an optimization plan when USER is discussing with the AGENT.
+Use this workflow when USER wants to record a new feature idea, a bug, or an optimization plan during a discussion with the AGENT.
 
-1. USER tells the idea or finding to the AGENT. The AGENT records the idea or finding into the `docs/IMPROVEMENTS.md` file. The AGENT uses IDs in the format `<LABEL>-<NNN>` (Example: `ENH-001` for enhancement, `BUG-002` for bug, `DOC-003` for documentation — see IMPROVEMENTS Structure). The AGENT writes the Problem and Possible Fix details. The AGENT sets the initial status to `recorded`.
-2. USER asks the AGENT to prepare a verification plan for all items in `docs/IMPROVEMENTS.md`. The AGENT composes a verification plan for all items with `recorded` status and shows the plan to verify ideas or findings, grouping ideas/findings that can be verified at once (because they share the same file and/or scope) into the same batch.
-3. USER asks the AGENT to start batch verification. The AGENT verifies the items in that batch, one by one, in 3 stages:
-   - Stage 1 (Code Verification): The AGENT checks the original code in the editor to confirm the problem is valid.
-   - Stage 2 (Online Verification): The AGENT verifies the planned solution against official documentation or other online sources so it does not go the wrong way.
-   - Stage 3 (Present Results): The AGENT stops and presents the results.
-4. If the Result is Valid: USER asks the AGENT to create a new GitHub Issue using GitHub CLI (`gh issue create`). The AGENT applies the default GitHub label matching the ID code (e.g. `enhancement`, `documentation`, `bug`). The AGENT makes sure the item ID is written in the issue title, not used as a custom label. The AGENT fills the issue body with complete technical details, then updates the status in the markdown to `verified` along with the Issue number: `#N` and Actual Fix. The AGENT stops, then presents the results to the USER.
+This document defines a sequence of interactions between the USER and the AGENT. Each interaction ends with the AGENT presenting the result and stopping; the next starts only when the USER orders it.
 
-   If the Result is Invalid: The AGENT directly changes the status in the markdown to `rejected` and does not continue to the next tracking process. The AGENT stops, then explains why the item was rejected.
-5. USER asks for `docs/IMPROVEMENTS.md` to be archived. The AGENT copies `docs/IMPROVEMENTS.md` to `docs/archived/IMPROVEMENT_YYYY-MM-DD.md`, then clears the `docs/IMPROVEMENTS.md` file again for the next batch. Note: to resolve items with `verified` status, see Code Implementation; after the issue is merged, the item status becomes `implemented` and the Issue column keeps recording the Issue number, not the PR number.
+Template files are linked from the template kit and are read only when the interaction that needs them is being executed — not during the initial read.
+
+The source links resolve in the same repository as this document. To read a file's content, the AGENT fetches its raw version (raw.githubusercontent.com) from the source link.
+
+## Record the idea or finding
+
+USER tells the idea or finding to the AGENT. While still in plan mode, the AGENT responds with a brief analysis and rewrites the idea or finding in its own words, from its own perspective, to confirm it understood what USER meant. USER reads the rewrite and confirms the AGENT understood correctly; if anything is wrong or imprecise, USER clarifies it again, still in plan mode. The AGENT may use the question tool to ask USER to clarify. This repeats until USER is confident the AGENT understood the idea or finding.
+
+Once USER is confident, USER switches to build mode and orders the AGENT to record the item. The AGENT records the item in `docs/IMPROVEMENTS.md` following the `### <ID> — <Title>` skeleton and the label code table in [`docs/IMPROVEMENTS.md`](../templates/docs/IMPROVEMENTS.md), and places it at the very bottom of the Items section. The item gets the status `recorded` and contains:
+- **ID:** `<LABEL_CODE>-<NNN>` built from the default GitHub labels, with numbers counted per label code. This numbering is local to the tracker file: each label code counts its own sequence from `001`, and after the tracker is archived and recreated, the numbering restarts from `001` again. It is independent from GitHub's numbering — the AGENT never derives or guesses a GitHub issue or PR number from the ID.
+- **Recorded:** the date and time the item was recorded.
+- **Problem:** describes the finding as application behavior when possible — for non-application items (CI, settings, tooling), the impact instead.
+- **Possible Fix:** the initial fix plan, written while still `recorded` so it is not guaranteed to work.
+
+The AGENT **presents the recorded item to the USER and stops**. No commit yet — this is the review gate. Once the USER approves, the AGENT commits the recorded items once (a single commit for the whole recording), then presents the result and stops.
+
+## Verify the recorded items
+
+USER orders the AGENT to verify the items with `recorded` status in `docs/IMPROVEMENTS.md`. The verification changes only those items — no other file. While still in plan mode, the AGENT verifies each item, one by one, with:
+- **Code verification** — checking the original code in the editor to confirm the problem is valid.
+- **Online verification** — checking the planned solution against official documentation or other online sources so it is not done the wrong way.
+
+The AGENT then presents the verification results and what it will change in each item, and the USER reviews and adjusts until it is fixed. Each item then becomes one of the following:
+- **`verified`** — the item is valid; its `Actual Fix` field is filled with the final fix plan confirmed during deep review.
+- **`rejected`** — the item is invalid; it is not continued, and the AGENT records why in its `Rejection Reason` field.
+
+Once the plan is fixed, USER switches to build mode and orders the AGENT to update the tracker. The AGENT changes each item's status and fields in `docs/IMPROVEMENTS.md`.
+
+The AGENT **presents the updated items to the USER and stops**. No commit yet — this is the review gate. Once the USER approves, the AGENT commits the updated items once (a single commit for the whole verification), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
+
+## Create GitHub Issues, close invalid ones, and keep the tracker in sync
+
+USER orders the AGENT to open the GitHub Issues and keep `docs/IMPROVEMENTS.md` in sync. While still in plan mode, the AGENT composes its plan:
+- **Issues to open** — one per item with `verified` status, using the default label matching the ID code (e.g. `enhancement`, `documentation`, `bug`), the issue title following the `[Type] <Title>` convention (e.g. `[Bug]`, `[Feature]`, `[Docs]`), and the complete technical details in the body. The item ID is not referenced in the issue.
+- **Open Issues to close** — one per item with `rejected` status that has an open Issue on GitHub. A `rejected` item has an open Issue only when that Issue was created directly on GitHub by a contributor, then synced into the tracker as a new `recorded` item in a previous Create GitHub Issues interaction and later verified as invalid in the Verify the recorded items interaction — the tracker item is now `rejected` while its Issue is still open, and the two conflict. Items that became `rejected` from freshly recorded ideas never had an Issue opened, so they are not in this list.
+- **Tracker updates to match the open Issues on GitHub** — open Issues may have been created by other contributors, so every open Issue without a matching item gets recorded as a new item with `recorded` status, and every item with an open Issue records its Issue number (`#N`) — the number GitHub assigned globally (Issues and Pull Requests share one global, ever-increasing sequence), not the item's tracker ID.
+
+The AGENT presents the plan to the USER. The USER reviews and adjusts the plan until it is fixed.
+
+Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT:
+- opens each new GitHub Issue with `gh issue create`, using the `[Type] <Title>` title convention, and fills the issue body with complete technical details;
+- closes each invalid open Issue with `gh issue close <#N> --comment "<rejection reason>"` — the comment explains why the issue is rejected, so anyone who later reads the closed issue understands;
+- syncs `docs/IMPROVEMENTS.md` — records the Issue number in the `Issue` field of each matched item and adds the new items for open Issues without a matching entry.
+
+The AGENT **presents the created and closed Issues and the synced tracker to the USER and stops**. If anything changed, no commit yet — this is the review gate. Once the USER approves, the AGENT commits the changed items once (a single commit for the whole sync), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
+
+## Archive the tracker
+
+USER orders the AGENT to archive `docs/IMPROVEMENTS.md`. This is allowed only when every item in it is finished — status `rejected` or `implemented`; open GitHub Issues do not block archiving. While still in plan mode, the AGENT reads `docs/IMPROVEMENTS.md` and verifies briefly that every item is finished. If any item still has status `recorded` or `verified`, the AGENT **stops and reminds the USER that the tracker is not ready to be archived**. If every item is finished, the AGENT presents its archive plan:
+- the target file `docs/archived/IMPROVEMENT_YYYY-MM-DD-HH-MM.md` — the archived copy of the finished tracker;
+- the recreation of `docs/IMPROVEMENTS.md` from the [`docs/IMPROVEMENTS.md`](../templates/docs/IMPROVEMENTS.md) template for the next batch — the numbering restarts from `001` per label code.
+
+The USER reviews and adjusts the plan until it is fixed.
+
+Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT copies `docs/IMPROVEMENTS.md` to `docs/archived/IMPROVEMENT_YYYY-MM-DD-HH-MM.md`, then recreates `docs/IMPROVEMENTS.md` from the [`docs/IMPROVEMENTS.md`](../templates/docs/IMPROVEMENTS.md) template so its format stays unchanged. Note: items with `verified` status are not worked on in this workflow.
+
+The AGENT **presents the archived result to the USER and stops**. No commit yet — this is the review gate. Once the USER approves, the AGENT commits the archived state once (a single commit), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
