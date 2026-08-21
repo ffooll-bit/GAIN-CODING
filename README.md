@@ -188,7 +188,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
 | [Bring an existing project up to standard](#bring-an-existing-project-up-to-standard) | **Workflow Adoption** |
 | [Prepare a repository for public release](#prepare-a-repository-for-public-release) | **Data Security and Public Readiness** |
 | [Record an idea, feature request, or bug](#record-an-idea-feature-request-or-bug) | **Findings and Planning** |
-| [Implement a verified GitHub Issue](#implement-a-verified-github-issue) | **Code Implementation** |
+| [Implement verified tracker items](#implement-verified-tracker-items) | **Code Implementation** |
 | [Recover from a CI failure or Git accident](#recover-from-a-ci-failure-or-git-accident) | **CI and Git Rescue** |
 | [Create a new release](#create-a-new-release) | **Release Process** |
 | [Handle dependency update PRs](#handle-dependency-update-prs) | **Dependabot PRs** |
@@ -235,14 +235,14 @@ Once the agent replies READY, choose the workflow that matches the task you want
   It describes how to record, verify, and track improvement ideas. The source files you need are linked in the document itself.
   ```
   
-- #### Implement a Verified GitHub Issue
+- #### Implement Verified Tracker Items
   
-  **[Code Implementation](playbook/workflow/code-implementation.md)** — implements a verified GitHub Issue through a branch and pull request.
+  **[Code Implementation](playbook/workflow/code-implementation.md)** - implements `verified` items from `docs/IMPROVEMENTS.md` through branches, pull requests, and merges.
   
   ```text
   Read this document fully: {URL}
   
-  It describes how to implement a verified GitHub Issue through a branch and pull request.
+  It describes how to implement `verified` items from the improvement tracker through branches, pull requests, and merges. The source files you need are linked in the document itself.
   ```
   
 - #### Recover from a CI Failure or Git Accident
