@@ -266,6 +266,8 @@ Once the agent replies READY, choose the workflow that matches the task you want
   Read this document fully: {URL}
   
   It describes how to cut a release end to end.
+
+  The source files you need are linked in the document itself.
   ```
   
 - #### Handle Dependency Update PRs
