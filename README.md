@@ -91,35 +91,35 @@ Context is given to you progressively, on purpose. You do not need to find it yo
 1. #### **[Core Rules](playbook/policies/core-rules.md)** — the workflow principles that cannot be bypassed.
 
    ```text
-   Read this document fully: {URL}
+   Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/policies/core-rules.md
    It defines the workflow principles you must follow for the rest of this session.
    ```
 
 2. #### **[Repository Protection](playbook/policies/repository-protection.md)** — the GitHub settings that enforce the workflow.
 
    ```text
-   Read this document fully: {URL}
+   Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/policies/repository-protection.md
    It explains the GitHub protection settings that enforce the workflow, including branch protection, merge methods, and restrictions on direct pushes.
    ```
 
 3. #### **[Merge Strategy](playbook/policies/merge-strategy.md)** — how pull requests enter the target branch for each case.
 
    ```text
-   Read this document fully: {URL}
+   Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/policies/merge-strategy.md
    It defines how a pull request enters the target branch for each case, including when to use squash, rebase, or merge.
    ```
 
 4. #### **[Branching Model](playbook/policies/branching-model.md)** — the branch layout and how to select the appropriate branch.
 
    ```text
-   Read this document fully: {URL}
+   Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/policies/branching-model.md
    It explains the branch layout, the basic flow, and which branch model to choose for a project.
    ```
 
 5. #### **[Boundaries](playbook/policies/boundaries.md)** — the limits that apply to the agent's operation.
 
    ```text
-   Read this document fully: {URL}
+   Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/policies/boundaries.md
    It defines the boundaries you must respect, including communication language, line wrapping, approval requirements, and the operating environment.
    ```
 
@@ -202,7 +202,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   **[Project Bootstrap](playbook/workflow/project-bootstrap.md)** — bootstraps a repository from scratch, including structure, guardrails, documentation, `.github`, CI, and repository protection.
   
   ```text
-  Read this document fully: {URL}
+  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/project-bootstrap.md
   
   It describes how to bootstrap a new project from scratch. The source files you need are linked in the document itself.
   ```
@@ -212,7 +212,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   **[Workflow Adoption](playbook/workflow/workflow-adoption.md)** — audits an existing project (a codebase that may or may not be a GitHub repository yet) and brings it up to the workflow standard defined in the document.
   
   ```text
-  Read this document fully: {URL}
+  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/workflow-adoption.md
   
   It describes how to bring an existing project up to the workflow standard defined in the document. The source files you need are linked in the document itself.
   ```
@@ -222,7 +222,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   **[Data Security and Public Readiness](playbook/workflow/data-security-and-public-readiness.md)** — audits a repository for sensitive data, polishes its public presentation, and makes it public. The source files you need are linked in the document itself.
   
   ```text
-  Read this document fully: {URL}
+  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/data-security-and-public-readiness.md
   
   It describes how to audit a repository, polish its public presentation, and make it public.
   ```
@@ -232,7 +232,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   **[Findings and Planning](playbook/workflow/findings-and-planning.md)** — records, verifies, and tracks feature ideas and bugs in `docs/IMPROVEMENTS.md`.
   
   ```text
-  Read this document fully: {URL}
+  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/findings-and-planning.md
   
   It describes how to record, verify, and track improvement ideas. The source files you need are linked in the document itself.
   ```
@@ -242,7 +242,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   **[Code Implementation](playbook/workflow/code-implementation.md)** — implements `verified` items from `docs/IMPROVEMENTS.md` through branches, pull requests, and merges.
   
   ```text
-  Read this document fully: {URL}
+  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/code-implementation.md
   
   It describes how to implement `verified` items from the improvement tracker through branches, pull requests, and merges. The source files you need are linked in the document itself.
   ```
@@ -252,7 +252,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   **[CI and Git Rescue](playbook/workflow/ci-and-git-rescue.md)** — recovers from CI failures, accidental commits to `main`, and rejected pushes.
   
   ```text
-  Read this document fully: {URL}
+  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/ci-and-git-rescue.md
   
   It describes how to recover from CI failures and Git accidents, including:
   - a failing CI workflow;
@@ -265,7 +265,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   **[Release Process](playbook/workflow/release-process.md)** — performs the complete SemVer release process.
   
   ```text
-  Read this document fully: {URL}
+  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/release-process.md
   
   It describes how to cut a release end to end. The source files you need are linked in the document itself.
   ```
@@ -275,7 +275,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
   **[Dependabot PRs](playbook/workflow/dependabot-prs.md)** — classifies and merges dependency update pull requests.
   
   ```text
-  Read this document fully: {URL}
+  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/dependabot-prs.md
   
   It describes how to handle Dependabot pull requests.
   ```
