@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>{PROJECT_NAME} Social Preview</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0b0e14;
+    --mantle: #12151e;
+    --surface: #191d2b;
+    --surface1: #242a3d;
+    --border: #242a3d;
+    --text: #e6e8ee;
+    --text-muted: #9aa1b5;
+    --accent: #7c86ff;
+    --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    --font-mono: 'Consolas', 'Monaco', 'Courier New', monospace;
+  }
+  html, body { width: 1280px; height: 640px; overflow: hidden; }
+  body { font-family: var(--font); }
+
+  .frame {
+    width: 1280px;
+    height: 640px;
+    padding: 53px;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .main {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    gap: 48px;
+  }
+
+  .brand { flex: 0 0 520px; }
+  .logo-row { display: flex; align-items: center; gap: 18px; margin-bottom: 22px; }
+  .logo {
+    width: 64px; height: 64px; flex-shrink: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent), var(--bg));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-cap {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+  h1 {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: 0.4px;
+    line-height: 1.08;
+  }
+  .subtitle {
+    margin-top: 8px;
+    font-size: 19px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .desc {
+    margin-top: 18px;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--text);
+    opacity: 0.92;
+    max-width: 500px;
+  }
+  .chips { margin-top: 26px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .chip {
+    padding: 8px 16px;
+    border: 1px solid var(--surface1);
+    border-radius: 999px;
+    background: var(--surface);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.4px;
+  }
+
+  .visual {
+    flex: 1;
+    min-width: 0;
+    min-height: 320px;
+    border: 1px dashed var(--surface1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+
+  .footer {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+  <div class="frame">
+    <div class="main">
+      <div class="brand">
+        <div class="logo-row">
+          <div class="logo" aria-hidden="true"></div>
+          <span class="logo-cap">{PROJECT_NAME}</span>
+        </div>
+        <h1>{PROJECT_NAME}</h1>
+        <div class="subtitle">{TAGLINE}</div>
+        <p class="desc">{SHORT_DESCRIPTION}</p>
+        <div class="chips">
+          <span class="chip">Chip One</span>
+          <span class="chip">Chip Two</span>
+          <span class="chip">Chip Three</span>
+        </div>
+      </div>
+
+      <div class="visual">Fill this area with a project visual.</div>
+    </div>
+
+    <div class="footer">
+      <span>{OWNER} / {REPO}</span>
+      <span>{LICENSE} · {TAGLINE}</span>
+    </div>
+  </div>
+</body>
+</html>

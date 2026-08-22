@@ -219,12 +219,12 @@ Once the agent replies READY, choose the workflow that matches the task you want
   
 - #### Prepare a Repository for Public Release
   
-  **[Data Security and Public Readiness](playbook/workflow/data-security-and-public-readiness.md)** — audits a repository for sensitive data and other public-release risks.
+  **[Data Security and Public Readiness](playbook/workflow/data-security-and-public-readiness.md)** — audits a repository for sensitive data, polishes its public presentation, and makes it public. The source files you need are linked in the document itself.
   
   ```text
   Read this document fully: {URL}
   
-  It describes how to audit a repository before making it public.
+  It describes how to audit a repository, polish its public presentation, and make it public.
   ```
   
 - #### Record an Idea, Feature Request, or Bug
