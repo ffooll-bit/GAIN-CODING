@@ -68,7 +68,7 @@ gh repo edit --homepage "<url>"
 gh repo edit --add-topic <topic>
 ```
 
-Uploading the social preview cannot be done through the GitHub CLI — the USER uploads `docs/social-preview.png` manually in the browser under Settings → General → Social preview. After everything is applied, the AGENT verifies the result with `gh repo view` and **presents the polished repository to the USER and stops**.
+Uploading the social preview cannot be done through the GitHub CLI; if wanted, the optional upload is handled in the Make the repository public interaction, where the option becomes available. After everything is applied, the AGENT verifies the result with `gh repo view` and **presents the polished repository to the USER and stops**.
 
 ## Make the repository public
 
@@ -78,4 +78,4 @@ USER approves changing the repository status to public — a visibility change i
 gh repo edit --visibility public --accept-visibility-change-consequences
 ```
 
-After the change, the AGENT verifies the protection settings are still intact (Branch Protection on `main`, the `build` required check, and the three merge methods). The AGENT **presents the result to the USER and stops**.
+After the change, the AGENT verifies the protection settings are still intact (Branch Protection on `main`, the `build` required check, and the three merge methods). Optionally, now that the repository is public, the USER can also upload `docs/social-preview.png` in Settings → General → Social preview — GitHub only offers that option for public repositories, or private ones that already carry an uploaded image. The AGENT **presents the result to the USER and stops**.
