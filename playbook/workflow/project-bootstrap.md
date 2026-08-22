@@ -22,7 +22,16 @@ Once the plan is fixed, USER switches to build mode and orders the AGENT to work
   - [`guardrail/.editorconfig`](../templates/guardrail/.editorconfig) → `.editorconfig` at the project root — enforces `LF` line endings and `UTF-8` without BOM. Keep it as-is.
   - [`guardrail/.gitattributes`](../templates/guardrail/.gitattributes) → `.gitattributes` at the project root — normalizes line endings to `LF` on checkout. Keep it as-is.
 
-- creates the standard documentation at the project root: `README.md` (project front page: badges, quick start, screenshot when present), `CHANGELOG.md` copied from the [`docs/CHANGELOG.md`](../templates/docs/CHANGELOG.md) template (release history, `Unreleased` on top), `LICENSE` (MIT or another license per need; follows the standard license format, hardwrapping allowed), `CONTRIBUTING.md` (contribution rules and the workflow that applies in this project), `CODE_OF_CONDUCT.md` (Contributor Covenant), and `SECURITY.md` (how to report security vulnerabilities and the response policy) — `ARCHITECTURE.md` and `STRUCTURE.md` are not created here (Magic Context generates them during the first dream session; the AGENT does not hand-write them, and updates them only when the architecture or structure changes significantly).
+- creates the standard documentation at the project root from the template kit — all of it lands at the root, and free-form files are written soft-wrapped: never break a line mid-paragraph:
+
+  - [`docs/README.md`](../templates/docs/README.md) → `README.md` at the project root — the project front page: badges, quick start, screenshot when present. Adapt the placeholders.
+  - [`docs/CHANGELOG.md`](../templates/docs/CHANGELOG.md) → `CHANGELOG.md` at the project root — release history, `Unreleased` on top. Keep it as-is.
+  - `LICENSE` — MIT or another license per need; follows the standard license format, hardwrapping allowed. No template: vendored verbatim from its official source.
+  - [`docs/CONTRIBUTING.md`](../templates/docs/CONTRIBUTING.md) → `CONTRIBUTING.md` at the project root — contribution rules and the workflow that applies in this project. Adapt the placeholders and stack commands.
+  - [`docs/CODE_OF_CONDUCT.md`](../templates/docs/CODE_OF_CONDUCT.md) → `CODE_OF_CONDUCT.md` at the project root — the Contributor Covenant. Replace only the contact placeholder.
+  - [`docs/SECURITY.md`](../templates/docs/SECURITY.md) → `SECURITY.md` at the project root — how to report security vulnerabilities and the response policy. Replace the placeholders.
+
+  `ARCHITECTURE.md` and `STRUCTURE.md` are not created here — Magic Context generates them during the first dream session; the AGENT does not hand-write them, and updates them only when the architecture or structure changes significantly.
 - prepares the `.github` folder from the template kit:
 
   - [`.github/workflows/ci.yml`](../templates/.github/workflows/ci.yml) → `.github/workflows/ci.yml` — a CI `build` job that fails on `CRLF` line endings or a UTF-8 BOM in Markdown files. Copy it as-is.
@@ -34,7 +43,7 @@ Once the plan is fixed, USER switches to build mode and orders the AGENT to work
 - creates `docs/IMPROVEMENTS.md` copied from the [`docs/IMPROVEMENTS.md`](../templates/docs/IMPROVEMENTS.md) template — the tracker for features, bugs, and optimization plans, whose items follow the lifecycle `recorded → verified → Issue → implemented → archived` and IDs `<LABEL_CODE>-<NNN>` (from the default GitHub labels). Each item is recorded under `## Items` using the `### <ID> — <Title>` skeleton from the template.
 - applies all GitHub protection settings through `gh api` / `gh repo edit`, after getting USER approval first (non-file changes are never executed directly): enable Branch Protection on `main`, set the CI status check `build` as a required check, set `enforce_admins=false`, set `delete_branch_on_merge=true`, enable all three merge methods (`merge`, `squash`, `rebase`) — which one is used for a given PR is decided per case — and ensure Issues are enabled.
 
-The AGENT **presents the prepared repository to the USER and stops**. No commit yet — this is the review gate.
+Before presenting, the AGENT scans every written Markdown file for mid-paragraph line breaks and unwraps any hardwrapped text. The AGENT **presents the prepared repository to the USER and stops**. No commit yet — this is the review gate.
 
 ## Commit and merge the first PR
 

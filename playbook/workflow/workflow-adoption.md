@@ -20,7 +20,16 @@ USER orders the AGENT to bring the existing repository up to the workflow standa
   - [`guardrail/.editorconfig`](../templates/guardrail/.editorconfig) → `.editorconfig` at the project root — enforces `LF` line endings and `UTF-8` without BOM. Keep it as-is.
   - [`guardrail/.gitattributes`](../templates/guardrail/.gitattributes) → `.gitattributes` at the project root — normalizes line endings to `LF` on checkout. Keep it as-is.
 
-- the standard documentation at the project root: `README.md` (project front page), `CHANGELOG.md` copied from the [`docs/CHANGELOG.md`](../templates/docs/CHANGELOG.md) template (release history, `Unreleased` on top), `LICENSE`, `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `SECURITY.md`. The existing documents are adjusted to the project when present.
+- the standard documentation at the project root from the template kit — all of it lands at the root, and free-form files are written soft-wrapped: never break a line mid-paragraph:
+
+  - [`docs/README.md`](../templates/docs/README.md) → `README.md` at the project root — the project front page. Adapt the placeholders.
+  - [`docs/CHANGELOG.md`](../templates/docs/CHANGELOG.md) → `CHANGELOG.md` at the project root — release history, `Unreleased` on top. Keep it as-is.
+  - `LICENSE` — MIT or another license per need; follows the standard license format, hardwrapping allowed. No template: vendored verbatim from its official source.
+  - [`docs/CONTRIBUTING.md`](../templates/docs/CONTRIBUTING.md) → `CONTRIBUTING.md` at the project root — contribution rules and the workflow that applies in this project. Adapt the placeholders and stack commands.
+  - [`docs/CODE_OF_CONDUCT.md`](../templates/docs/CODE_OF_CONDUCT.md) → `CODE_OF_CONDUCT.md` at the project root — the Contributor Covenant. Replace only the contact placeholder.
+  - [`docs/SECURITY.md`](../templates/docs/SECURITY.md) → `SECURITY.md` at the project root — how to report security vulnerabilities and the response policy. Replace the placeholders.
+
+  Missing documents are created; existing documents are adjusted to the project.
 - the `.github` folder from the template kit:
 
   - [`.github/workflows/ci.yml`](../templates/.github/workflows/ci.yml) → `.github/workflows/ci.yml` — a CI `build` job that fails on `CRLF` line endings or a UTF-8 BOM in Markdown files.
@@ -36,7 +45,7 @@ First, while still in plan mode, the AGENT assesses the existing project against
 
 Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT applies the target state to the existing repository: it creates what is missing and verifies and adjusts what already exists.
 
-The AGENT **presents the adjusted repository to the USER and stops**. No commit yet — this is the review gate.
+Before presenting, the AGENT scans every written Markdown file for mid-paragraph line breaks and unwraps any hardwrapped text. The AGENT **presents the adjusted repository to the USER and stops**. No commit yet — this is the review gate.
 
 ## Commit and merge the pull request
 
