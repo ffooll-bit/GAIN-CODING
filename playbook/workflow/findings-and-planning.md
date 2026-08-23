@@ -37,14 +37,14 @@ The AGENT **presents the updated items to the USER and stops**. No commit yet �
 ## Create GitHub Issues, close invalid ones, and keep the tracker in sync
 
 USER orders the AGENT to open the GitHub Issues and keep `docs/IMPROVEMENTS.md` in sync. While still in plan mode, the AGENT composes its plan:
-- **Issues to open** — one per item with `verified` status, using the default label matching the ID code (e.g. `enhancement`, `documentation`, `bug`), the issue title following the `[Type] <Title>` convention (e.g. `[Bug]`, `[Feature]`, `[Docs]`), and the complete technical details in the body. The item ID is not referenced in the issue.
+- **Issues to open** — one per item with `verified` status, using the default label matching the ID code (e.g. `enhancement`, `documentation`, `bug`), a plain descriptive title without any type prefix — the label is the only type marker on the issue — and the complete technical details in the body. The item ID is not referenced in the issue.
 - **Open Issues to close** — one per item with `rejected` status that has an open Issue on GitHub. A `rejected` item has an open Issue only when that Issue was created directly on GitHub by a contributor, then synced into the tracker as a new `recorded` item in a previous Create GitHub Issues interaction and later verified as invalid in the Verify the recorded items interaction — the tracker item is now `rejected` while its Issue is still open, and the two conflict. Items that became `rejected` from freshly recorded ideas never had an Issue opened, so they are not in this list.
 - **Tracker updates to match the open Issues on GitHub** — open Issues may have been created by other contributors, so every open Issue without a matching item gets recorded as a new item with `recorded` status, and every item with an open Issue records its Issue number (`#N`) — the number GitHub assigned globally (Issues and Pull Requests share one global, ever-increasing sequence), not the item's tracker ID.
 
 The AGENT presents the plan to the USER. The USER reviews and adjusts the plan until it is fixed.
 
 Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT:
-- opens each new GitHub Issue with `gh issue create`, using the `[Type] <Title>` title convention, and fills the issue body with complete technical details;
+- opens each new GitHub Issue with `gh issue create`, using a plain descriptive title without any prefix, and fills the issue body with complete technical details;
 - closes each invalid open Issue with `gh issue close <#N> --comment "<rejection reason>"` — the comment explains why the issue is rejected, so anyone who later reads the closed issue understands;
 - syncs `docs/IMPROVEMENTS.md` — records the Issue number in the `Issue` field of each matched item and adds the new items for open Issues without a matching entry.
 
