@@ -191,9 +191,9 @@ Once the agent replies READY, choose the workflow that matches the task you want
 | [Prepare a repository for public release](#prepare-a-repository-for-public-release) | **Data Security and Public Readiness** |
 | [Record an idea, feature request, or bug](#record-an-idea-feature-request-or-bug) | **Findings and Planning** |
 | [Implement verified tracker items](#implement-verified-tracker-items) | **Code Implementation** |
+| [Handle dependency update PRs](#handle-dependency-update-prs) | **Dependabot PRs** |
 | [Recover from a CI failure or Git accident](#recover-from-a-ci-failure-or-git-accident) | **CI and Git Rescue** |
 | [Create a new release](#create-a-new-release) | **Release Process** |
-| [Handle dependency update PRs](#handle-dependency-update-prs) | **Dependabot PRs** |
 
 </div>
 
@@ -247,6 +247,16 @@ Once the agent replies READY, choose the workflow that matches the task you want
   It describes how to implement `verified` items from the improvement tracker through branches, pull requests, and merges. The source files you need are linked in the document itself.
   ```
   
+- #### Handle Dependency Update PRs
+  
+  **[Dependabot PRs](playbook/workflow/dependabot-prs.md)** — classifies and merges dependency update pull requests.
+  
+  ```text
+  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/dependabot-prs.md
+  
+  It describes how to handle Dependabot pull requests.
+  ```
+  
 - #### Recover from a CI Failure or Git Accident
   
   **[CI and Git Rescue](playbook/workflow/ci-and-git-rescue.md)** — recovers from CI failures, accidental commits to `main`, and rejected pushes.
@@ -268,16 +278,6 @@ Once the agent replies READY, choose the workflow that matches the task you want
   Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/release-process.md
   
   It describes how to cut a release end to end. The source files you need are linked in the document itself.
-  ```
-  
-- #### Handle Dependency Update PRs
-  
-  **[Dependabot PRs](playbook/workflow/dependabot-prs.md)** — classifies and merges dependency update pull requests.
-  
-  ```text
-  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/dependabot-prs.md
-  
-  It describes how to handle Dependabot pull requests.
   ```
 
 ## Workflow Map
