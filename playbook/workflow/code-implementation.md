@@ -54,7 +54,7 @@ USER orders the AGENT to open the pull request for the finished branch. While st
 
 The AGENT presents the PR plan — how many PRs will be opened, each title, body, and checklist — and the USER reviews and adjusts until it is fixed. Nothing is committed in this interaction; the approval of this plan is what moves the work forward.
 
-Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT opens each pull request:
+Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT pushes each finished branch (`git push -u origin <branch>`) and opens its pull request:
 
 ```
 gh pr create --body-file <pr-body-file>

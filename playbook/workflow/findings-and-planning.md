@@ -4,6 +4,8 @@ Use this workflow when USER wants to record a new feature idea, a bug, or an opt
 
 This document defines a sequence of interactions between the USER and the AGENT. Each interaction ends with the AGENT presenting the result and stopping; the next starts only when the USER orders it.
 
+The whole cycle works on a working branch `docs/improvements`. It is created from `main` when the first approved change is committed, and every review gate commits onto it. Its changes reach `main` only through the Deliver the updates through a pull request interaction — after each delivery, the branch is recreated from updated `main` when new changes need committing again.
+
 Template files are linked from the template kit and are read only when the interaction that needs them is being executed — not during the initial read.
 
 The source links resolve in the same repository as this document. To read a file's content, the AGENT fetches its raw version (raw.githubusercontent.com) from the source link.
@@ -18,7 +20,7 @@ Once USER is confident, USER switches to build mode and orders the AGENT to reco
 - **Problem:** describes the finding as application behavior when possible — for non-application items (CI, settings, tooling), the impact instead.
 - **Possible Fix:** the initial fix plan, written while still `recorded` so it is not guaranteed to work.
 
-The AGENT **presents the recorded item to the USER and stops**. No commit yet — this is the review gate. Once the USER approves, the AGENT commits the recorded items once (a single commit for the whole recording), then presents the result and stops.
+The AGENT **presents the recorded item to the USER and stops**. No commit yet — this is the review gate. Once the USER approves, the AGENT commits the recorded items once on the working branch (a single commit for the whole recording), then presents the result and stops.
 
 ## Verify the recorded items
 
@@ -32,7 +34,7 @@ The AGENT then presents the verification results and what it will change in each
 
 Once the plan is fixed, USER switches to build mode and orders the AGENT to update the tracker. The AGENT changes each item's status and fields in `docs/IMPROVEMENTS.md`.
 
-The AGENT **presents the updated items to the USER and stops**. No commit yet — this is the review gate. Once the USER approves, the AGENT commits the updated items once (a single commit for the whole verification), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
+The AGENT **presents the updated items to the USER and stops**. No commit yet — this is the review gate. Once the USER approves, the AGENT commits the updated items once on the working branch (a single commit for the whole verification), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
 
 ## Create GitHub Issues, close invalid ones, and keep the tracker in sync
 
@@ -48,7 +50,7 @@ Once the plan is fixed, USER switches to build mode and orders the AGENT to work
 - closes each invalid open Issue with `gh issue close <#N> --comment "<rejection reason>"` — the comment explains why the issue is rejected, so anyone who later reads the closed issue understands;
 - syncs `docs/IMPROVEMENTS.md` — records the Issue number in the `Issue` field of each matched item and adds the new items for open Issues without a matching entry.
 
-The AGENT **presents the created and closed Issues and the synced tracker to the USER and stops**. If anything changed, no commit yet — this is the review gate. Once the USER approves, the AGENT commits the changed items once (a single commit for the whole sync), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
+The AGENT **presents the created and closed Issues and the synced tracker to the USER and stops**. If anything changed, no commit yet — this is the review gate. Once the USER approves, the AGENT commits the changed items once on the working branch (a single commit for the whole sync), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
 
 ## Archive the tracker
 
@@ -60,4 +62,18 @@ The USER reviews and adjusts the plan until it is fixed.
 
 Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT copies `docs/IMPROVEMENTS.md` to `docs/archived/IMPROVEMENT_YYYY-MM-DD-HH-MM.md`, then recreates `docs/IMPROVEMENTS.md` from the [`docs/IMPROVEMENTS.md`](../templates/docs/IMPROVEMENTS.md) template so its format stays unchanged. Note: items with `verified` status are not worked on in this workflow.
 
-The AGENT **presents the archived result to the USER and stops**. No commit yet — this is the review gate. Once the USER approves, the AGENT commits the archived state once (a single commit), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
+The AGENT **presents the archived result to the USER and stops**. No commit yet — this is the review gate. Once the USER approves, the AGENT commits the archived state once on the working branch (a single commit), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
+
+## Deliver the updates through a pull request
+
+USER orders the AGENT to deliver the tracker updates to `main`. This interaction is selectable at any point — it delivers whatever the working branch holds, no matter which interactions produced it. While still in plan mode, the AGENT inventories the unmerged commits (`git log main..HEAD` — an empty list means there is nothing to deliver, and the AGENT **stops with that verdict**) and composes the delivery plan:
+
+- pushing the branch (`git push -u origin docs/improvements`);
+- opening one pull request into `main` — title and body following the project's Pull Request Template, the body written to a temporary file in `temp/` and applied with `--body-file`;
+- the merge method chosen per the Merge Strategy policy from the commit count — a single-commit pull request merges with squash, an accumulated multi-commit branch authored by one person merges with rebase.
+
+The AGENT presents the delivery plan to the USER. The USER reviews and adjusts the plan until it is fixed.
+
+Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT pushes the branch and opens the pull request, waits for a green CI (if a check fails, the AGENT fixes it locally and pushes one new commit to the same branch), merges with `gh pr merge --<method> --delete-branch --admin`, then cleans up: switches back to `main`, syncs it (`git pull origin main`), and deletes the leftover local branch.
+
+The AGENT **presents the merged result and the synced `main` to the USER and stops**.
