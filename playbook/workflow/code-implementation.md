@@ -41,9 +41,10 @@ Once the plan is fixed, USER switches to build mode and orders the AGENT to work
 - the tracker item becomes `implemented` — the `Implemented` field records the current date and time, the `Actual Implemented` and `Changes` fields are filled, and the `Issue` field keeps the Issue number, not the PR number;
 - a release note is added under the `[Unreleased]` category in `CHANGELOG.md` (format follows the [CHANGELOG template](../templates/docs/CHANGELOG.md)). If the work has no linked tracker item, only the release note applies.
 
-Right before committing, if the work has a linked Issue, the AGENT checks its current status with `gh issue view <#N>`: if the Issue was closed by someone else in the meantime, the AGENT **stops and presents this to the USER for a decision** instead of proceeding.
+No commit yet — this is the review gate. Before presenting anything, if the work has a linked Issue, the AGENT checks its current status with `gh issue view <#N>`:
 
-Otherwise the AGENT **presents the behaviour preview and the proposed commit message to the USER and stops**. No commit yet — this is the review gate. A behaviour preview describes the effect from the user's or the application's point of view (example: "login now shows a message when the token expires"), not file locations or code line details. Once the USER approves, the AGENT commits everything as one atomic commit — the code change together with the tracker update and the release note — then presents the result and stops. The next item starts only when USER orders it, and this interaction begins again in plan mode.
+- **Issue closed by someone else** → the AGENT **stops and presents the fact that the Issue was closed by another contributor to the USER for a decision** instead of proceeding.
+- **Issue still open** → the AGENT **presents the behaviour preview and the proposed commit message to the USER and stops**. A behaviour preview describes the effect from the user's or the application's point of view (example: "login now shows a message when the token expires"), not file locations or code line details. Once the USER approves, the AGENT commits everything as one atomic commit — the code change together with the tracker update and the release note — then presents the result and stops. The next item starts only when USER orders it, and this interaction begins again in plan mode.
 
 ## Open the pull request
 

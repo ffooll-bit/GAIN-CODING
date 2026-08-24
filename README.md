@@ -339,17 +339,12 @@ GAIN-CODING is model-agnostic documentation, but every claim needs evidence. Thi
 
 <div align="center">
 
-| Model | Status | Notes |
-|-------|--------|-------|
-| Big Pickle | In testing | First end-to-end run in progress |
+| Model | Status |
+|-------|--------|
+| Big Pickle | Testing paused — upstream routing may send Big Pickle to Prima Labs with an invalid model name (per public logs), causing frequent mid-stream truncation and silent hangs |
+| Nemotron 3 Ultra Free | In testing — working normally; occasional *upstream 502 overload from Nvidia* → brief wait per request |
 
 </div>
-
-Status legend:
-
-- **In testing**: a run has started
-- **Passed**: Phase 1 plus at least one workflow completed end to end
-- **Issues found**: completed with problems, described in Notes
 
 Ran it on another model? Open an issue or send a pull request updating this table.
 
