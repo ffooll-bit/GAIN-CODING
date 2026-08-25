@@ -14,9 +14,10 @@ The source links resolve in the same repository as this document. To read a file
 
 USER tells the idea or finding to the AGENT. While still in plan mode, the AGENT responds with a brief analysis and rewrites the idea or finding in its own words, from its own perspective, to confirm it understood what USER meant. USER reads the rewrite and confirms the AGENT understood correctly; if anything is wrong or imprecise, USER clarifies it again, still in plan mode. The AGENT may use the question tool to ask USER to clarify. This repeats until USER is confident the AGENT understood the idea or finding.
 
-Once USER is confident, USER switches to build mode and orders the AGENT to record the item. The AGENT records the item in `docs/IMPROVEMENTS.md` following the `### <ID> — <Title>` skeleton and the label code table in [`docs/IMPROVEMENTS.md`](../templates/docs/IMPROVEMENTS.md), and places it at the very bottom of the Items section. The item gets the status `recorded` and contains:
+Once USER is confident, USER switches to build mode and orders the AGENT to record the item. The AGENT records the item in `docs/IMPROVEMENTS.md` following the `### <ID> — <Title>` skeleton and the label code table in [`docs/IMPROVEMENTS.md`](../templates/docs/IMPROVEMENTS.md), and places it at the very bottom of the Items section. This interaction fills only the fields below; every other field stays `—`:
 - **ID:** `<LABEL_CODE>-<NNN>` built from the default GitHub labels, with numbers counted per label code. This numbering is local to the tracker file: each label code counts its own sequence from `001`, and after the tracker is archived and recreated, the numbering restarts from `001` again. It is independent from GitHub's numbering — the AGENT never derives or guesses a GitHub issue or PR number from the ID.
-- **Recorded:** the date and time the item was recorded.
+- **Status:** the literal value `recorded`.
+- **Recorded:** the date and time the item was recorded, formatted `YYYY-MM-DD HH:MM`.
 - **Problem:** describes the finding as application behavior when possible — for non-application items (CI, settings, tooling), the impact instead.
 - **Possible Fix:** the initial fix plan, written while still `recorded` so it is not guaranteed to work.
 
@@ -29,8 +30,10 @@ USER orders the AGENT to verify the items with `recorded` status in `docs/IMPROV
 - **Online verification** — checking the planned solution against official documentation or other online sources so it is not done the wrong way.
 
 The AGENT then presents the verification results and what it will change in each item, and the USER reviews and adjusts until it is fixed. Each item then becomes one of the following:
-- **`verified`** — the item is valid; its `Actual Fix` field is filled with the final fix plan confirmed during deep review.
-- **`rejected`** — the item is invalid; it is not continued, and the AGENT records why in its `Rejection Reason` field.
+- **`verified`** — the item is valid; its `Status` becomes `verified` and its `Actual Fix` field is filled with the final fix plan confirmed during deep review.
+- **`rejected`** — the item is invalid; its `Status` becomes `rejected`, it is not continued, and the AGENT records why in its `Rejection Reason` field.
+
+This interaction changes only `Status`, `Actual Fix` (for `verified` items), and `Rejection Reason` (for `rejected` items); every other field stays unchanged (`—`).
 
 Once the plan is fixed, USER switches to build mode and orders the AGENT to update the tracker. The AGENT changes each item's status and fields in `docs/IMPROVEMENTS.md`.
 
@@ -41,14 +44,16 @@ The AGENT **presents the updated items to the USER and stops**. No commit yet �
 USER orders the AGENT to open the GitHub Issues and keep `docs/IMPROVEMENTS.md` in sync. While still in plan mode, the AGENT composes its plan:
 - **Issues to open** — one per item with `verified` status, using the default label matching the ID code (e.g. `enhancement`, `documentation`, `bug`), a plain descriptive title without any type prefix — the label is the only type marker on the issue — and the complete technical details in the body. The item ID is not referenced in the issue.
 - **Open Issues to close** — one per item with `rejected` status that has an open Issue on GitHub. A `rejected` item has an open Issue only when that Issue was created directly on GitHub by a contributor, then synced into the tracker as a new `recorded` item in a previous Create GitHub Issues interaction and later verified as invalid in the Verify the recorded items interaction — the tracker item is now `rejected` while its Issue is still open, and the two conflict. Items that became `rejected` from freshly recorded ideas never had an Issue opened, so they are not in this list.
-- **Tracker updates to match the open Issues on GitHub** — open Issues may have been created by other contributors, so every open Issue without a matching item gets recorded as a new item with `recorded` status, and every item with an open Issue records its Issue number (`#N`) — the number GitHub assigned globally (Issues and Pull Requests share one global, ever-increasing sequence), not the item's tracker ID.
+- **Tracker updates to match the open Issues on GitHub** — open Issues may have been created by other contributors, so:
+  - every open Issue without a matching item gets recorded as a new `recorded` item — its `ID` is `<LABEL_CODE>-<NNN>` built from the issue's label code (for example, an issue labeled `bug` gets `BUG-<NNN>`), `Status` = `recorded`, `Recorded` = the sync timestamp (`YYYY-MM-DD HH:MM`), `Issue` = `#N`, `Problem` drawn from the issue title and body, `Possible Fix` left `—`, and every other field `—`;
+  - every existing item with an open Issue records its Issue number (`#N`) — the number GitHub assigned globally (Issues and Pull Requests share one global, ever-increasing sequence), not the item's tracker ID.
 
 The AGENT presents the plan to the USER. The USER reviews and adjusts the plan until it is fixed.
 
 Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT:
 - opens each new GitHub Issue with `gh issue create`, using a plain descriptive title without any prefix, and fills the issue body with complete technical details;
-- closes each invalid open Issue with `gh issue close <#N> --comment "<rejection reason>"` — the comment explains why the issue is rejected, so anyone who later reads the closed issue understands;
-- syncs `docs/IMPROVEMENTS.md` — records the Issue number in the `Issue` field of each matched item and adds the new items for open Issues without a matching entry.
+- closes each invalid open Issue with `gh issue close <#N> --comment "<rejection reason>"` — the comment explains why the issue is rejected, so anyone who later reads the closed issue understands. This closes the GitHub Issue but changes no tracker field.
+- syncs `docs/IMPROVEMENTS.md` — for every existing item with a matching open Issue, records `#N` in its `Issue` field (the global GitHub number that Issues and Pull Requests share, not the tracker ID). For every open Issue without a matching item, adds a new `recorded` item: `ID` = `<LABEL_CODE>-<NNN>` built from the issue's label code (for example, an issue labeled `bug` gets `BUG-<NNN>`), `Status` = `recorded`, `Recorded` = the sync timestamp (`YYYY-MM-DD HH:MM`), `Issue` = `#N`, `Problem` from the issue title and body, `Possible Fix` = `—`, all other fields `—`. This interaction fills the `Issue` field of matched items and creates new `recorded` items with the fields listed; no other field of existing items changes.
 
 The AGENT **presents the created and closed Issues and the synced tracker to the USER and stops**. If anything changed, no commit yet — this is the review gate. Once the USER approves, the AGENT commits the changed items once on the working branch (a single commit for the whole sync), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
 
@@ -60,7 +65,7 @@ USER orders the AGENT to archive `docs/IMPROVEMENTS.md`. This is allowed only wh
 
 The USER reviews and adjusts the plan until it is fixed.
 
-Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT copies `docs/IMPROVEMENTS.md` to `docs/archived/IMPROVEMENT_YYYY-MM-DD-HH-MM.md`, then recreates `docs/IMPROVEMENTS.md` from the [`docs/IMPROVEMENTS.md`](../templates/docs/IMPROVEMENTS.md) template so its format stays unchanged. Note: items with `verified` status are not worked on in this workflow.
+Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT copies `docs/IMPROVEMENTS.md` to `docs/archived/IMPROVEMENT_YYYY-MM-DD-HH-MM.md`, then recreates `docs/IMPROVEMENTS.md` from the [`docs/IMPROVEMENTS.md`](../templates/docs/IMPROVEMENTS.md) template so its format stays unchanged. Note: items with `verified` status are not worked on in this workflow. This interaction does not fill any item fields — it only copies the finished tracker and recreates a fresh one from the template.
 
 The AGENT **presents the archived result to the USER and stops**. No commit yet — this is the review gate. Once the USER approves, the AGENT commits the archived state once on the working branch (a single commit), then presents the result and stops. If the USER wants adjustments, USER switches back to plan mode and the AGENT revises its plan first.
 
@@ -74,6 +79,6 @@ USER orders the AGENT to deliver the tracker updates to `main`. This interaction
 
 The AGENT presents the delivery plan to the USER. The USER reviews and adjusts the plan until it is fixed.
 
-Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT pushes the branch and opens the pull request, waits for a green CI (if a check fails, the AGENT fixes it locally and pushes one new commit to the same branch), merges with `gh pr merge --<method> --delete-branch --admin`, then cleans up: switches back to `main`, syncs it (`git pull origin main`), and deletes the leftover local branch.
+Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT pushes the branch and opens the pull request, waits for a green CI (if a check fails, the AGENT fixes it locally and pushes one new commit to the same branch), merges with `gh pr merge --<method> --delete-branch --admin`, then cleans up: switches back to `main`, syncs it (`git pull origin main`), and deletes the leftover local branch. This interaction does not fill any item fields.
 
 The AGENT **presents the merged result and the synced `main` to the USER and stops**.
