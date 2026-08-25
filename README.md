@@ -339,10 +339,11 @@ GAIN-CODING is model-agnostic documentation, but every claim needs evidence. Thi
 
 <div align="center">
 
-| Model | Status |
-|-------|--------|
-| Big Pickle | Testing paused — upstream routing may send Big Pickle to Prima Labs with an invalid model name (per public logs), causing frequent mid-stream truncation and silent hangs |
-| Nemotron 3 Ultra Free | In testing — working normally; occasional *upstream 502 overload from Nvidia* → brief wait per request |
+| Model | Status | Notes |
+|-------|--------|-------|
+| Big Pickle | TESTING PAUSED | <ul><li>Upstream routing may send Big Pickle to Prima Labs with an invalid model name (per public logs), causing frequent mid-stream truncation and silent hangs</li></ul> |
+| Nemotron 3 Ultra Free | USABLE | <ul><li>Works well overall</li><li>Occasional *upstream 502 overload from Nvidia* → brief wait per request</li><li>USER must be explicit at each workflow interaction: the model may over-focus on the user's words and skip documented gates (e.g., commits despite "No commit yet")</li><li>Rarely uses Magic Context unless asked</li></ul> |
+| Hy3 Free | IN TESTING | <ul><li>Testing in progress — no detailed findings yet</li></ul> |
 
 </div>
 
