@@ -383,8 +383,8 @@ GAIN-CODING is model-agnostic documentation, but every claim needs evidence. Thi
 | Model | Status | Notes |
 |-------|--------|-------|
 | Big Pickle | TESTING PAUSED | <ul><li>Upstream routing may send Big Pickle to Prima Labs with an invalid model name (per public logs), causing frequent mid-stream truncation and silent hangs</li></ul> |
-| Nemotron 3 Ultra Free | USABLE | <ul><li>Works well overall</li><li>Occasional *upstream 502 overload from Nvidia* → brief wait per request</li><li>The model needs explicit instructions from the USER at the start of every interaction: it may over-focus on the user's words and skip documented gates (e.g., commits despite "No commit yet"), tends to collapse every interaction into just two modes (plan and build) and read plan approval as commit approval, and rarely engages Magic Context unless explicitly asked</li></ul> |
-| Hy3 Free | IN TESTING | <ul><li>Testing in progress — no detailed findings yet</li></ul> |
+| Nemotron 3 Ultra Free | RETESTING | <ul><li>Works well overall</li><li>Occasional *upstream 502 overload from Nvidia* → brief wait per request</li><li>The model needs explicit instructions from the USER at the start of every interaction: it may over-focus on the user's words and skip documented gates (e.g., commits despite "No commit yet"), tends to collapse every interaction into just two modes (plan and build) and read plan approval as commit approval, and rarely engages Magic Context unless explicitly asked</li><li>Being re-tested with the updated GAIN-CODING documents (hardened gate and authority guidance, `##`-interaction convention) to check whether the over-focus on chat wording is reduced</li></ul> |
+| Hy3 Free | RETESTING | <ul><li>Shows the same symptom as Nemotron 3 Ultra Free — it over-focuses on the USER's chat wording and skips document instructions</li><li>Being re-tested with the updated GAIN-CODING documents to check whether the hardened guidance helps</li></ul> |
 
 </div>
 
