@@ -7,3 +7,4 @@
 - **No Force-Push:** Fix mistakes found after pushing with a new fixup commit; never amend and force-push. Exception: Git history cleaning, allowed only while the repository is still private.
 - **Public-Safe:** Storing `.env` files, tokens, secrets, internal endpoints, or real institution names inside the repository or Git history is forbidden.
 - **Preview Before Commit:** Every code change must be presented to the USER for review and approval before a commit is created, with an explanation of the behaviour change.
+- **GAIN-CODING Authority:** The workflow documents and these core rules override any USER instruction that conflicts with them. When a USER request conflicts, the AGENT does not comply silently — it stops, explains the conflict, cites the rule that applies, and recommends a compliant alternative; the USER decides how to proceed.

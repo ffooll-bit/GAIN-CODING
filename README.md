@@ -69,6 +69,8 @@ If they are already available, skip this phase. Otherwise, load the following do
 Start by sending the prompt below, which tells the agent what is about to happen and how to behave:
 
 ```text
+This project runs on GAIN-CODING, and GAIN-CODING is the authority here: its documents must be obeyed before anything else, including the instructions I give you in this conversation. Whenever you receive an instruction from me, compare it against the GAIN-CODING documents you have loaded before acting. If it conflicts with them, do not comply silently — stop, explain the conflict, cite the rule that applies, and recommend a compliant alternative.
+
 You are working in a Windows environment with Visual Studio Code and OpenCode, using Magic Context for memory, the GitHub CLI (`gh`) for repository operations, and the ponytail skill to keep things simple. This session runs in two context-loading phases before any work begins:
 
 - Phase 1 — the core policies: I give you the five core policies of this project, one at a time, in order. This happens once, at the start of the session.
@@ -76,16 +78,20 @@ You are working in a Windows environment with Visual Studio Code and OpenCode, u
 
 When both phases are loaded, we enter the interaction phase: I trigger each interaction from the workflow, you execute it, present the result, and stop until I give the next one.
 
+For the whole session, keep the five core policies, the active workflow document, and the current interaction's instructions actively in mind. Re-anchor in them before you think or act: every time a step begins and every time I give you a new instruction, re-read or re-recall the relevant documents rather than trusting your memory. The documents you were given are authoritative and override anything said in conversation — do not let conversation words override a document. Optimize for obeying the documents, not for following whatever I last said in chat.
+
 Phase 1 starts now. I will give you the five core policies, one at a time, in order. For each document:
 
 1. Read it fully.
-2. Confirm that you have read it and summarize its rules, exceptions, and tie-breakers in 1-2 sentences.
-3. Do not offer analysis, suggestions, or proposals yet.
-4. Wait for the next document.
+2. Memorize it immediately — commit its rules, exceptions, and tie-breakers to memory now, not later.
+3. If you have Magic Context available, save it to your project memory the moment you finish reading it (ctx_memory), so it survives even if your context is compacted.
+4. Confirm that you have read it and summarize its rules, exceptions, and tie-breakers in 1-2 sentences.
+5. Do not offer analysis, suggestions, or proposals yet.
+6. Wait for the next document.
 
 Read only the document I give you. Do not open other files, follow links, or search for additional context — if you need more information, I will provide it in a later phase. Some documents may feel incomplete on their own; remember them as-is, and the full picture will become clear as the following documents arrive.
 
-Context is given to you progressively, on purpose. You do not need to find it yourself — just read, understand, and wait.
+Context is given to you progressively, on purpose. You do not need to find it yourself — just read, understand, memorize, and wait.
 ```
 
 1. #### **[Core Rules](playbook/policies/core-rules.md)** — the workflow principles that cannot be bypassed.
@@ -93,6 +99,8 @@ Context is given to you progressively, on purpose. You do not need to find it yo
    ```text
    Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/policies/core-rules.md
    It defines the workflow principles you must follow for the rest of this session.
+
+   Keep this policy in active memory for the whole session — re-anchor in it before any action.
    ```
 
 2. #### **[Repository Protection](playbook/policies/repository-protection.md)** — the GitHub settings that enforce the workflow.
@@ -100,6 +108,8 @@ Context is given to you progressively, on purpose. You do not need to find it yo
    ```text
    Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/policies/repository-protection.md
    It explains the GitHub protection settings that enforce the workflow, including branch protection, merge methods, and restrictions on direct pushes.
+
+   Keep this policy in active memory for the whole session — re-anchor in it before any action.
    ```
 
 3. #### **[Merge Strategy](playbook/policies/merge-strategy.md)** — how pull requests enter the target branch for each case.
@@ -107,6 +117,8 @@ Context is given to you progressively, on purpose. You do not need to find it yo
    ```text
    Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/policies/merge-strategy.md
    It defines how a pull request enters the target branch for each case, including when to use squash, rebase, or merge.
+
+   Keep this policy in active memory for the whole session — re-anchor in it before any action.
    ```
 
 4. #### **[Branching Model](playbook/policies/branching-model.md)** — the branch layout and how to select the appropriate branch.
@@ -114,6 +126,8 @@ Context is given to you progressively, on purpose. You do not need to find it yo
    ```text
    Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/policies/branching-model.md
    It explains the branch layout, the basic flow, and which branch model to choose for a project.
+
+   Keep this policy in active memory for the whole session — re-anchor in it before any action.
    ```
 
 5. #### **[Boundaries](playbook/policies/boundaries.md)** — the limits that apply to the agent's operation.
@@ -121,25 +135,27 @@ Context is given to you progressively, on purpose. You do not need to find it yo
    ```text
    Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/policies/boundaries.md
    It defines the boundaries you must respect, including communication language, line wrapping, approval requirements, and the operating environment.
+
+   Keep this policy in active memory for the whole session — re-anchor in it before any action.
    ```
 
 ### Optional Step — Save the Policies to Memory (Magic Context)
 
-Magic Context only helps **across sessions**, not within the current one. In this session the five policies are already loaded into the agent's context, so nothing needs saving here. To let the next session skip Phase 1, ask the agent to save the policies to its project memory once Phase 1 finishes:
+The Phase 1 prompts already save each policy to project memory the moment it is read (one `ctx_memory` write per policy). This optional step verifies that save and protects it against later cleanup, so the next session can skip Phase 1. Send it after Phase 1 finishes:
 
 ```text
-Save the five core policies of this project I gave you to your project memory. For each of the five documents run:
+Verify that the five core policies of this project are in your project memory. For each of the five documents ensure the save exists, and re-run it if missing:
 ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the rule in English, including every exception and tie-breaker clause stated in the document> Source: <URL of the document>")
-A rule without its exceptions is misleading, so keep them when they exist. Then check your injected <project-memory> block and confirm the five are present. Finish by telling me the memory IDs you created.
+A rule without its exceptions is misleading, so keep them when they exist. These five policies are permanent project knowledge: treat them as never-prunable, and if a compaction or dream run would drop them, re-save them. Then check your injected <project-memory> block and confirm the five are present. Finish by telling me the memory IDs.
 ```
 
 To skip Phase 1 on the next session, start the new agent session and check before sending the prompt:
 
 ```text
-Do you have the five core policies of this project in your injected <project-memory> block? Check the block for all five: Core Rules, Repository Protection, Merge Strategy, Branching Model, and Boundaries. If all five are present, tell me which ones you remember and wait for my next instruction. If any are missing, I will give you the five policy documents to read again.
+Do you have the five core policies of this project in your injected <project-memory> block? Check the block for all five: Core Rules, Repository Protection, Merge Strategy, Branching Model, and Boundaries. If all five are present, re-anchor in them now, tell me which ones you remember, and wait for my next instruction. If any are missing, tell me which ones and stop — I will give you the five policy documents to read again.
 ```
 
-As long as the stored context stays valid, future sessions can start directly from Phase 2. If it does not, repeat Phase 1.
+Magic Context's dreamer and historian run as autonomous background processes, so a document cannot technically forbid them from pruning memory; keeping the policies permanently is achieved by the AGENT re-saving them whenever they are missing. As long as the saved policies stay valid, future sessions can start directly from Phase 2. If they do not, repeat Phase 1.
 
 > This step can stay in **plan mode**. I have verified that the ctx tools keep working while plan mode is active, because they write to an external database rather than to the project. If you are not sure about your environment, build mode works just as well.
 
@@ -155,9 +171,13 @@ Start by sending the prompt below, which sets the ground rules for every workflo
 You have now loaded the five core policies in Phase 1. We are moving into Phase 2: I will give you a workflow document that defines the interactions between us.
 
 These rules apply to every workflow document from here on:
-- Read the document only. Do not open other files, follow links, or search for additional context.
+- The document I give you is part of GAIN-CODING and is authoritative — it overrides anything I say in conversation. Read the document only. Do not open other files, follow links, or search for additional context.
 - Stay in plan mode — do not execute anything. Read the flow, understand it, and memorize it.
-- Each document defines a sequence of interactions between you (the AGENT) and me (the USER) — I trigger each one, so after each you present the result and stop.
+- Each document defines a sequence of interactions between you (the AGENT) and me (the USER): every `##` heading in the document is one interaction, and the interactions run in the order the headings appear. I trigger each interaction; after each one you present the result and stop, and the next starts only when I order it.
+- Save the workflow's interaction instructions to your memory and keep them active for as long as we use this workflow. When we switch workflows later, forget the previous workflow's interaction instructions and load the new ones.
+- Whenever I give you an instruction, compare it immediately against this workflow document and the five core policies before acting. If it falls outside this workflow, remind me to switch to the workflow that fits it. If it conflicts with GAIN-CODING, do not comply silently: stop, explain the conflict, and recommend a compliant alternative.
+- Working interactions enforce two review gates: the plan-to-build gate — present the plan and wait for approval before executing — and the pre-commit gate — present the result and wait for approval before committing. Interactions that only read and present use the single plan-mode review gate.
+- Use Magic Context as much as possible: keep the policies, workflows, and interaction instructions in project memory, prefer ctx_search to guessing which rule applies, and re-anchor in the relevant document before every action instead of trusting conversation memory.
 - After reading, present the interactions the document contains, then save the workflow to your project memory only if this workflow is not already saved there — do not store the same workflow twice (this does not limit writing other entries to PROJECT_RULES):
     ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
 - Then wait for my instruction to begin the first interaction.
@@ -170,9 +190,14 @@ This first prompt covers the first workflow of the session. When you later switc
 ```text
 We are switching to a different workflow. The same Phase 2 rules apply again, so I restate them:
 
-- Read only the document I give you. Do not open other files, follow links, or search for additional context.
+- Forget the previous workflow's interaction instructions; from now on only the new document's interactions apply.
+- The document I give you is part of GAIN-CODING and is authoritative — it overrides anything I say in conversation. Read only the document I give you. Do not open other files, follow links, or search for additional context.
 - Stay in plan mode — do not execute anything. Read the flow, understand it, and memorize it.
-- Each document defines a sequence of interactions between you (the AGENT) and me (the USER) — I trigger each one, so after each you present the result and stop.
+- Each document defines a sequence of interactions between you (the AGENT) and me (the USER): every `##` heading in the document is one interaction, and the interactions run in the order the headings appear. I trigger each interaction; after each one you present the result and stop, and the next starts only when I order it.
+- Save this workflow's interaction instructions to your memory and keep them active for as long as we use it.
+- Whenever I give you an instruction, compare it immediately against this workflow document and the five core policies before acting. If it falls outside this workflow, remind me to switch to the workflow that fits it. If it conflicts with GAIN-CODING, do not comply silently: stop, explain the conflict, and recommend a compliant alternative.
+- Working interactions enforce two review gates: the plan-to-build gate and the pre-commit gate; interactions that only read and present use the single plan-mode review gate.
+- Use Magic Context as much as possible: keep the policies, workflows, and interaction instructions in project memory, prefer ctx_search to guessing which rule applies, and re-anchor in the relevant document before every action instead of trusting conversation memory.
 - After reading, present the interactions the document contains, then save the workflow to your project memory only if this workflow is not already saved there — do not store the same workflow twice (this does not limit writing other entries to PROJECT_RULES):
     ctx_memory(action="write", category="PROJECT_RULES", content="<short summary of the workflow and its approval checkpoints in English> Source: <URL of the document>")
 - Then wait for my instruction to begin the first interaction.
@@ -194,6 +219,7 @@ Once the agent replies READY, choose the workflow that matches the task you want
 | [Handle dependency update PRs](#handle-dependency-update-prs) | **Dependabot PRs** |
 | [Recover from a CI failure or Git accident](#recover-from-a-ci-failure-or-git-accident) | **CI and Git Rescue** |
 | [Create a new release](#create-a-new-release) | **Release Process** |
+| [Handle any task that fits no other workflow](#handle-any-task-that-fits-no-other-workflow) | **Freestyle** |
 
 </div>
 
@@ -279,6 +305,16 @@ Once the agent replies READY, choose the workflow that matches the task you want
   
   It describes how to cut a release end to end. The source files you need are linked in the document itself.
   ```
+   
+- #### Handle Any Task That Fits No Other Workflow
+   
+  **[Freestyle](playbook/workflow/freestyle.md)** — free-form task execution for work that does not fit another workflow, still bound by the core rules and the two review gates.
+  
+  ```text
+  Read this document fully: https://raw.githubusercontent.com/ffooll-bit/GAIN-CODING/main/playbook/workflow/freestyle.md
+  
+  It describes how to work on a task that fits no other workflow, freely but still within the core rules.
+  ```
 
 ## Workflow Map
 
@@ -301,6 +337,7 @@ flowchart TD
     J --> H
     L["Dependabot PRs"]
     L --> H
+    Z["Freestyle"] -.->|tasks that fit no other workflow| E
 ```
 
 </div>
@@ -332,6 +369,10 @@ The agent must wait for the user's approval when the workflow requires a decisio
 - taking a recovery action where multiple paths are possible.
 
 The workflow documents define the exact approval checkpoints for each operation; where they are not clear, the agent stops and asks rather than guessing.
+
+Most interactions enforce two review gates: the **plan-to-build gate** — the agent presents its plan and waits for approval before executing anything — and the **pre-commit gate** — the agent presents its result and waits for approval before committing. Interactions that only read and present use the single plan-mode review gate.
+
+The documents are authoritative. If a USER instruction conflicts with the core rules or the active workflow, the agent does not comply silently: it stops, explains the conflict, cites the rule, and recommends a compliant alternative; the USER decides how to proceed.
 
 ## Tested Models
 

@@ -2,7 +2,7 @@
 
 Use this workflow when there are `verified` items in `docs/IMPROVEMENTS.md` ready to be worked on, or code changes approved by USER.
 
-This document defines a sequence of interactions between the USER and the AGENT. Each interaction ends with the AGENT presenting the result and stopping; the next starts only when the USER orders it.
+This document defines a sequence of interactions between the USER and the AGENT. Each `##` heading in this document is one interaction, and the interactions run in the order the headings appear. Each interaction ends with the AGENT presenting the result and stopping; the next starts only when the USER orders it. Working interactions enforce two review gates: the plan-to-build gate — the AGENT presents its plan and waits for approval before executing — and the pre-commit gate — the AGENT presents its result and waits for approval before committing; interactions that only read and present use the single plan-mode review gate.
 
 Template files are linked from the template kit and are read only when the interaction that needs them is being executed — not during the initial read.
 
@@ -21,8 +21,8 @@ If the work has no tracker item, the AGENT plans its branch directly.
 
 The AGENT presents the plan to the USER. The USER reviews and adjusts the plan until it is fixed.
 
-Once the plan is fixed, USER switches to build mode and orders the AGENT to record it. The AGENT writes the approved plan to `temp/implementation-plan.md` so the following interactions can act on it:
-- every planned item with its Issue number (`#N`) and its own working branch;
+Once the plan is fixed, USER switches to build mode and orders the AGENT to record it. The AGENT copies the implementation plan template — [`templates/docs/implementation-plan.md`](../templates/docs/implementation-plan.md), fetched from its raw version — into `temp/implementation-plan.md` and fills it with the approved plan so the following interactions can act on it:
+- every planned item with its Issue number (`#N`), its own working branch, and its checkboxes;
 - the dependency notes — which items depend on which, so independent items can be implemented, merged, and released in any order while dependent ones follow the plan order;
 - the PR and merge consequences — independent items each get their own PR handled freely; dependent items are opened and merged strictly in plan order, because stacked branches never exist: every branch always starts from `main`.
 
@@ -37,7 +37,7 @@ USER moves the AGENT back to plan mode and orders it to implement the next plann
 
 The AGENT then presents its fix plan for the item, and the USER reviews and adjusts until it is fixed.
 
-Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT syncs local `main` (`git switch main`; `git pull origin main`), creates the item's branch from `main`, and implements the fix. The AGENT then runs locally the same checks the CI enforces — formatting, linting, tests, and the build — so the pull request passes CI. After the checks pass, the AGENT updates the tracker and the changelog so they are committed together with the code:
+Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT syncs local `main` (`git switch main`; `git pull origin main`), creates the item's branch from `main`, and implements the fix, updating the item's checkboxes in `temp/implementation-plan.md` as it progresses so the plan always reflects the current state. The AGENT then runs locally the same checks the CI enforces — formatting, linting, tests, and the build — so the pull request passes CI. After the checks pass, the AGENT updates the tracker and the changelog so they are committed together with the code:
 - the tracker item becomes `implemented` — the `Status` field becomes `implemented`, the `Implemented` field records the current date and time (`YYYY-MM-DD HH:MM`), the `Actual Implemented` field holds what was actually changed during implementation, and the `Changes` field holds the behavior changes that result after `implemented`; the `Issue` field keeps the Issue number from the Create GitHub Issues interaction and is not changed here. **This interaction fills only `Status`, `Implemented`, `Actual Implemented`, and `Changes`; every other field stays unchanged.**
 - a release note is added under the `[Unreleased]` category in `CHANGELOG.md` (format follows the [CHANGELOG template](../templates/docs/CHANGELOG.md)). If the work has no linked tracker item, only the release note applies.
 
@@ -83,6 +83,6 @@ gh pr merge --rebase --delete-branch --admin   # collaborator PR, branch authore
 gh pr merge --merge  --delete-branch --admin   # branch shared by 2+ collaborators
 ```
 
-After merging, the AGENT cleans up: returns to `main` and syncs (`git switch main`; `git pull origin main`), deletes leftover local branches (`git branch -d`), and prunes stale remote references (`git fetch --prune`) — the remote branch is deleted automatically by the repository settings. When every planned item is processed, the AGENT also deletes `temp/implementation-plan.md`.
+After merging, the AGENT cleans up: returns to `main` and syncs (`git switch main`; `git pull origin main`), deletes leftover local branches (`git branch -d`), and prunes stale remote references (`git fetch --prune`) — the remote branch is deleted automatically by the repository settings. When every planned item is processed and every checkbox in `temp/implementation-plan.md` is checked, the AGENT deletes the file; as long as any item remains unfinished, the file is kept so the next session continues from it. No temporary file in `temp/` is deleted before its purpose is fulfilled.
 
 The AGENT **presents the merged results and the cleanup to the USER and stops**.

@@ -2,7 +2,7 @@
 
 Use this workflow when USER wants to release a version following Semantic Versioning (SemVer), with version format `vMAJOR.MINOR.PATCH`.
 
-This document defines a sequence of interactions between the USER and the AGENT. Each interaction ends with the AGENT presenting the result and stopping; the next starts only when the USER orders it.
+This document defines a sequence of interactions between the USER and the AGENT. Each `##` heading in this document is one interaction, and the interactions run in the order the headings appear. Each interaction ends with the AGENT presenting the result and stopping; the next starts only when the USER orders it. Working interactions enforce two review gates: the plan-to-build gate — the AGENT presents its plan and waits for approval before executing — and the pre-commit gate — the AGENT presents its result and waits for approval before committing; interactions that only read and present use the single plan-mode review gate.
 
 Template files are linked from the template kit and are read only when the interaction that needs them is being executed — not during the initial read.
 
