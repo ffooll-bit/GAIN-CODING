@@ -84,7 +84,7 @@ Phase 1 starts now. I will give you the five core policies, one at a time, in or
 
 1. Read it fully.
 2. Memorize it immediately — commit its rules, exceptions, and tie-breakers to memory now, not later.
-3. If you have Magic Context available, save it to your project memory the moment you finish reading it (ctx_memory), so it survives even if your context is compacted.
+3. If you have Magic Context available, save it to your project memory the moment you finish reading it (ctx_memory), so it survives even if your context is compacted. Memory writes go to an external database, not the project, so they are allowed in plan mode — if the harness blocks the call, ask me to switch to build mode for that one step so the call runs there, and confirm it succeeded.
 4. Confirm that you have read it and summarize its rules, exceptions, and tie-breakers in 1-2 sentences.
 5. Do not offer analysis, suggestions, or proposals yet.
 6. Wait for the next document.
@@ -157,7 +157,7 @@ Do you have the five core policies of this project in your injected <project-mem
 
 Magic Context's dreamer and historian run as autonomous background processes, so a document cannot technically forbid them from pruning memory; keeping the policies permanently is achieved by the AGENT re-saving them whenever they are missing. As long as the saved policies stay valid, future sessions can start directly from Phase 2. If they do not, repeat Phase 1.
 
-> This step can stay in **plan mode**. I have verified that the ctx tools keep working while plan mode is active, because they write to an external database rather than to the project. If you are not sure about your environment, build mode works just as well.
+> These memory operations (`ctx_memory` write/update/delete, `ctx_note`) write to an external database, not the project files, so they are permitted in **plan mode**. If the harness blocks one, the AGENT will ask you to switch to build mode for that single operation — switch it, and have the AGENT confirm it landed. If you are not sure about your environment, build mode works just as well.
 
 ### Phase 2 — Choose a Workflow
 

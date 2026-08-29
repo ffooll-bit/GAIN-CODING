@@ -74,7 +74,7 @@ The AGENT **presents the archived result to the USER and stops**. No commit yet 
 USER orders the AGENT to deliver the tracker updates to `main`. This interaction is selectable at any point — it delivers whatever the working branch holds, no matter which interactions produced it. While still in plan mode, the AGENT inventories the unmerged commits (`git log main..HEAD` — an empty list means there is nothing to deliver, and the AGENT **stops with that verdict**) and composes the delivery plan:
 
 - pushing the branch (`git push -u origin docs/improvements`);
-- opening one pull request into `main` — title and body following the project's Pull Request Template, the body written to a temporary file in `temp/` and applied with `--body-file`;
+- opening one pull request into `main` — title and body following the project's Pull Request Template, **but omitting the `Related issues` / `Fixes #N` section: the issues this tracker documents stay open until Code Implementation resolves them**; the body is written to a temporary file in `temp/` and applied with `--body-file`;
 - the merge method chosen per the Merge Strategy policy from the commit count — a single-commit pull request merges with squash, an accumulated multi-commit branch authored by one person merges with rebase.
 
 The AGENT presents the delivery plan to the USER. The USER reviews and adjusts the plan until it is fixed.
