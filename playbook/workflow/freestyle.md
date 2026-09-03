@@ -2,7 +2,7 @@
 
 Use this workflow when the task does not fit any of the other workflows — ad-hoc research, experiments, exploratory changes, or any work the USER wants handled without a fixed interaction sequence. It is still bound by the core rules, including the Issue-Driven rule, the No Direct Push rule, the Atomic Conventional Commits rule, and the Preview Before Commit rule.
 
-This document defines the ground rules for free-form work between the USER and the AGENT. The `##` heading in this document marks the working section. Freestyle has no fixed sequence of interactions: the USER drives the work freely, and after every step the AGENT presents the result and stops until the next instruction. Working steps enforce the two standard review gates — the plan-to-build gate, where the AGENT presents its plan and waits for approval before executing, and the pre-commit gate, where the AGENT presents its result and waits for approval before committing.
+This document defines the ground rules for free-form work between the USER and the AGENT. The `##` heading in this document marks the working section. Freestyle has no fixed sequence of interactions: the USER drives the work freely, and after every step the AGENT presents the result and stops until the next instruction. Working steps enforce the two standard review gates — the plan-to-build gate, where the AGENT presents its plan and waits for approval before executing, and the pre-commit gate, where the AGENT presents its result and waits for approval before committing. Standard flow branches from and merges to `main`; when `dev`/`develop` exists per the Branching Model policy, the USER directs the AGENT to adapt branch origins and merge targets accordingly.
 
 ## Work a free-form task
 

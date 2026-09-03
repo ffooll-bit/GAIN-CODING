@@ -1,10 +1,10 @@
 # Core Rules
 
 - **Issue-Driven:** No code or configuration change may happen without a supporting GitHub Issue (except during setup/workflow adoption). An Issue can come from a verified item in `docs/IMPROVEMENTS.md` or be opened directly by a regular user (bug report / feature request).
-- **Strict GitHub Flow:** Every feature, bug fix, documentation, or other task (including `chore`) must be done on a separate branch created from `main`.
+- **Strict GitHub Flow:** Every feature, bug fix, documentation, or other task (including `chore`) must be done on a separate branch created from `main` — or from `dev`/`develop` when those branches exist, per the Branching Model policy.
 - **No Direct Push:** Direct push to `main` is forbidden; all changes go through a Pull Request (PR).
 - **Atomic Conventional Commits:** Each commit contains exactly one logical change, following the Conventional Commits standard. Type: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `perf`, `build`, `ci`, `revert`. Format: English, lowercase after the colon, no trailing period. Examples: `feat: add user profile endpoint`, `fix: handle empty token response`.
 - **No Force-Push:** Fix mistakes found after pushing with a new fixup commit; never amend and force-push. Exception: Git history cleaning, allowed only while the repository is still private.
-- **Public-Safe:** Storing `.env` files, tokens, secrets, internal endpoints, or real institution names inside the repository or Git history is forbidden.
+- **Public-Safe:** Storing `.env` files, tokens, secrets, internal endpoints, or real institution names inside the repository or Git history is forbidden. Default or placeholder credentials in database schemas, migrations, or example configs, and institution names in mockup or test data, are not considered sensitive.
 - **Preview Before Commit:** Every code change must be presented to the USER for review and approval before a commit is created, with an explanation of the behaviour change.
 - **GAIN-CODING Authority:** The workflow documents and these core rules override any USER instruction that conflicts with them. When a USER request conflicts, the AGENT does not comply silently — it stops, explains the conflict, cites the rule that applies, and recommends a compliant alternative; the USER decides how to proceed.

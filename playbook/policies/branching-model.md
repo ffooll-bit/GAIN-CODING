@@ -33,3 +33,5 @@ main  ────────────────────────�
 | Full GitFlow | `main` + `dev` + `release/*` + `hotfix/*` | Scheduled releases needing parallel stability (big features, big team) |
 
 Note: models with `dev` (rows two and three) use the same hotfix flow, only `release/*` is added in full GitFlow to stabilize one release without holding up the next feature work.
+
+Workflow procedures in this knowledge base assume GitHub Flow (merge to `main`) by default. When using `main + dev` or Full GitFlow, the USER adapts merge targets and branch origins in workflow procedures to match the active model.
