@@ -14,11 +14,14 @@ The AGENT **presents the passing checks to the USER and stops**.
 
 ## Salvage a commit landed on main
 
-USER reports a commit that landed directly on `main`. While still in plan mode, the AGENT confirms the stray commit (`git log -1`) and presents its salvage plan: secure the work on a salvage branch first, then drop the commit from local `main`, then let the work return through a proper pull request.
+USER reports a commit that landed directly on `main`. While still in plan mode, the AGENT confirms the stray commit (`git log -1`), checks whether it already reached the remote (`git branch -r --contains HEAD`), and presents its salvage plan: secure the work on a salvage branch first, then drop the commit from `main`, then let the work return through a proper pull request.
 
 Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT:
 
 - secures the work before touching anything — `git branch chore/salvaged-work` while `main` still points at the stray commit;
+- checks whether the remote already carries the stray commit, and decides where the cleanup ends:
+  - **not pushed yet** — the local reset below is enough;
+  - **already on `origin/main`** — the local reset below changes nothing, and the next `git pull` brings the commit back. Removing it from the remote rewrites published history, which the Core Rules allow only while the repository is still private: the AGENT **stops, presents the fact to the USER and waits for a decision**, then on that instruction force-pushes the cleaned `main` (`git push origin --force-with-lease main`) while the repository is private, or leaves the published commit in place and records it as a known blemish once the repository is public;
 - drops the commit from local `main` — `git reset --hard HEAD~1` (a higher number when more than one commit landed);
 - pushes the salvage branch (`git push -u origin chore/salvaged-work`) and opens a pull request from it — the body written to a temporary file in `temp/` and applied with `--body-file`;
 - waits for a green CI and merges with `gh pr merge --squash --delete-branch --admin`.
