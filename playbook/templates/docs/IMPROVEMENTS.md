@@ -34,6 +34,8 @@ Item IDs follow the format `<LABEL_CODE>-<NNN>` built from the default GitHub la
 
 ## Items
 
+_The first item is seeded by the template and is part of the standard: the repository has just been created, so its structure has not been verified against the workflow standard yet. Project Bootstrap and Workflow Adoption keep it — never delete it — then it is verified through Findings and Planning and becomes `implemented` through Code Implementation once the setup is confirmed. Every new item is appended below it._
+
 ### ENH-001 — Repository structure not verified against the standard
 - **Status:** `recorded`
 - **Issue:** `—`
