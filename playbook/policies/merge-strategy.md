@@ -5,15 +5,17 @@ The merge method choice is decided per PR, not per repository, with the followin
 1. PR from a **non-collaborator** (external contributor, including bots such as Dependabot) → **squash merge** (`gh pr merge --squash --delete-branch`). The original commits on the branch are not controlled by this project, so the whole PR is joined into one clean commit on `main`.
 2. PR from a **collaborator** with a branch authored by only 1 collaborator → **rebase merge** (`gh pr merge --rebase --delete-branch`). Atomic commits written with discipline are kept intact on top of `main`, and `main` history stays linear.
 3. PR on a branch **shared by 2+ collaborators** (team feature worked on together) → **merge commit** (`gh pr merge --merge --delete-branch`). The integration trace of the collaboration is preserved as one unit; the accepted reasonable trade-off is that `main` is no longer purely linear in this scenario.
-4. PR that **contains only 1 commit** → just **squash merge** (the result is identical to rebase for a single commit).
+4. PR that **contains only 1 commit** → just **squash merge** (the result is identical to rebase for a single commit). **Check this rule first:** a PR with exactly 1 commit takes squash even when rules 2 and 3 also match.
 
 Note: the merge method and the branch model are two independent decisions. The merge method determines *how* one PR enters the target branch, while the branch model determines *from where to where* the PR flow goes.
 
 ## Decision Matrix
 
+Read this matrix from the top and stop at the first row that matches:
+
 | PR source | Branch authors | Method | Command |
 |-----------|---------------|--------|---------|
+| Any | 1 commit total | squash | `gh pr merge --squash --delete-branch --admin` |
 | Non-collaborator (incl. bots) | any | squash | `gh pr merge --squash --delete-branch --admin` |
 | Collaborator | 1 | rebase | `gh pr merge --rebase --delete-branch --admin` |
 | Collaborator | 2+ | merge commit | `gh pr merge --merge --delete-branch --admin` |
-| Any | 1 commit total | squash | `gh pr merge --squash --delete-branch --admin` |
