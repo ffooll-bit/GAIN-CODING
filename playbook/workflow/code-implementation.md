@@ -17,7 +17,7 @@ While still in plan mode, the AGENT:
 - assigns each item its own working branch `<prefix>/<kebab-case-description>` created from `main`, with the prefix chosen from `feature/`, `fix/`, `chore/`, `docs/`, `refactor/` — strictly one Issue per branch, per the Branching Model policy;
 - determines the processing order, so an item that depends on another starts only after that item's pull request has been merged.
 
-If the work has no tracker item, the AGENT plans its branch directly.
+If the work has no tracker item — a code change the USER approved outside the tracker — the AGENT still opens the supporting GitHub Issue first, per the Issue-Driven rule in the Core Rules, and plans the branch from that Issue. Only the tracker item is waived here; the Issue is never waived.
 
 The AGENT presents the plan to the USER. The USER reviews and adjusts the plan until it is fixed.
 
@@ -37,7 +37,7 @@ USER moves the AGENT back to plan mode and orders it to implement the next plann
 
 The AGENT then presents its fix plan for the item, and the USER reviews and adjusts until it is fixed.
 
-Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT syncs local `main` (`git switch main`; `git pull origin main`), creates the item's branch from `main`, and implements the fix, updating the item's checkboxes in `temp/implementation-plan.md` as it progresses so the plan always reflects the current state. The AGENT then runs locally the same checks the CI enforces — formatting, linting, tests, and the build — so the pull request passes CI. After the checks pass, the AGENT updates the tracker and the changelog so they are committed together with the code:
+Once the plan is fixed, USER switches to build mode and orders the AGENT to work. The AGENT syncs local `main` (`git switch main`; `git pull origin main`), creates the item's branch from `main`, and implements the fix, updating the item's checkboxes in `temp/implementation-plan.md` as it progresses so the plan always reflects the current state. The AGENT then runs the project's own checks locally — formatting, linting, tests, and the build, using the commands the project's `CONTRIBUTING.md` and pull request template define — so the pull request passes CI. The template `ci.yml` verifies only line endings and BOM, so a green `build` check never proves that lint, tests, or the build actually ran. After the checks pass, the AGENT updates the tracker and the changelog so they are committed together with the code:
 - the tracker item becomes `implemented` — the `Status` field becomes `implemented`, the `Implemented` field records the current date and time (`YYYY-MM-DD HH:MM`), the `Actual Implemented` field holds what was actually changed during implementation, and the `Changes` field holds the behavior changes that result after `implemented`; the `Issue` field keeps the Issue number from the Create GitHub Issues interaction and is not changed here. **This interaction fills only `Status`, `Implemented`, `Actual Implemented`, and `Changes`; every other field stays unchanged.**
 - a release note is added under the `[Unreleased]` category in `CHANGELOG.md` (format follows the [CHANGELOG template](../templates/docs/CHANGELOG.md)). If the work has no linked tracker item, only the release note applies.
 
@@ -65,7 +65,7 @@ The AGENT **presents the opened pull requests to the USER and stops**.
 
 ## Merge the pull requests
 
-USER orders the AGENT to merge the open pull requests. Open pull requests may come from this workflow or from other contributors; pull requests opened by bots, such as Dependabot's dependency updates, are not handled in this interaction. This workflow assumes every pull request it opens passes CI — the implementation interaction runs the same checks locally before committing. While still in plan mode, the AGENT lists every open PR it may merge and classifies each one by its mergeability (`gh pr view <#N> --json mergeable,mergeStateStatus`):
+USER orders the AGENT to merge the open pull requests. Open pull requests may come from this workflow or from other contributors; pull requests opened by bots, such as Dependabot's dependency updates, are not handled in this interaction. This workflow assumes every pull request it opens passes CI — the implementation interaction runs the project's checks locally before committing. While still in plan mode, the AGENT lists every open PR it may merge and classifies each one by its mergeability (`gh pr view <#N> --json mergeable,mergeStateStatus`):
 - **Ready to merge** — the CI checks are green and there are no conflicts.
 - **Conflicted** — the resolution goes into the plan: the AGENT merges `main` into the feature branch, resolves the conflict locally, and pushes normally — never force-pushes and never rewrites history.
 
