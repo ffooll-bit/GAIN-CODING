@@ -21,10 +21,10 @@ git log --all --oneline -- .env
 
 The AGENT **presents the audit results to the USER and stops**. The USER reviews the results and chooses the next step:
 
-- **Sensitive data found in past commits.** The plan is a permanent Git history cleanup. The USER can review and adjust the plan while staying in plan mode, then switches to build mode and orders the AGENT to work.
+- **Sensitive data found in past commits.** The plan is a Git history cleanup: the exposed secret is revoked and rotated first, then the history is rewritten. The USER can review and adjust the plan while staying in plan mode, then switches to build mode and orders the AGENT to work.
 - **No sensitive data found.** There is nothing to purge. The USER switches to build mode and orders the AGENT to proceed to the next interaction.
 
-When sensitive data was found, the AGENT removes the sensitive data using `git-filter-repo` inside an isolated Python virtual environment. It creates the `temp/` folder when missing, clones the repository as an emergency mirror, writes the sensitive strings found in the audit into `rules.txt` (one per line), and runs the cleanup:
+When sensitive data was found, the AGENT revokes and rotates the exposed secret first and does not start the rewrite until the USER confirms the old credential no longer works — a rewritten history does not undo a leak that already happened. The AGENT then removes the sensitive data using `git-filter-repo` inside an isolated Python virtual environment. It creates the `temp/` folder when missing, clones the repository as an emergency mirror, writes the sensitive strings found in the audit into `rules.txt` **inside `temp/purge.git`** (one per line), and runs the cleanup:
 
 ```
 # Clone the repository as an emergency mirror
@@ -35,7 +35,7 @@ python -m venv .venv
 & .\.venv\Scripts\Activate.ps1
 pip install git-filter-repo
 git-filter-repo --replace-text rules.txt
-# Make sure the sensitive string is truly gone from the log
+# Verify the rewrite: no commit in this clone still carries the string
 git log -S "<keyword>"
 ```
 
@@ -47,7 +47,7 @@ git push origin --force --all
 git push origin --force --tags
 ```
 
-After the force push, the AGENT syncs the local working repo: `git fetch --prune` to remove stale refs, then `git reset --hard origin/main` to reset to the new history, then verifies with `git log --all -S "<keyword>"` (not just `git log`) to make sure no ref still carries sensitive data. The AGENT **presents the purged repository to the USER and stops**. No visibility change yet — this is the review gate.
+After the force push, the AGENT syncs the local working repo: `git fetch --prune` to remove stale refs, then `git reset --hard origin/main` to reset to the new history, then verifies with `git log --all -S "<keyword>"` (not just `git log`) so no branch or tag ref still carries sensitive data. That check covers branches and tags only, and the AGENT says so instead of declaring the data gone: the old commits stay readable by their SHA in cached views on GitHub, through the pull requests that reference them, and in forks or clones taken before the rewrite. A full purge on GitHub's side needs a request through the GitHub Support portal — with the affected pull request numbers and the first changed commit `git-filter-repo` reported — and forks have to be deleted or cleaned by their owners. Last, the AGENT deletes the emergency mirror (`Remove-Item -Recurse -Force temp/purge.git`) so the sensitive history does not stay on disk. The AGENT **presents the purged repository to the USER and stops**. No visibility change yet — this is the review gate.
 
 ## Polish the public presentation
 
@@ -60,7 +60,9 @@ USER orders the AGENT to make the repository presentable according to community 
 
 The AGENT drafts each item, presents the full plan to the USER and stops. The USER adjusts the drafts while staying in plan mode, then switches to build mode and orders the AGENT to work.
 
-In build mode, the AGENT first edits `README.md` and creates the social preview files exactly as approved — the README change is committed on a branch and merged through a pull request, never pushed directly to `main`. The repository settings changes are non-file changes presented for approval before execution:
+In build mode, the AGENT first edits `README.md` and creates the social preview files exactly as approved. The AGENT **presents the README diff and the created files to the USER and stops**. No commit yet — this is the review gate.
+
+Once the USER approves the files, the AGENT commits the README change on a branch and merges it through a pull request — the commit never goes directly to `main`. The repository settings changes are non-file changes presented for approval before execution:
 
 ```
 gh repo edit --description "<description>"
